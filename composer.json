@@ -1,0 +1,38 @@
+{
+    "name": "wazza/dom-translate",
+    "description": "Client Library to translate an HTML page before rendering it to the page.",
+    "type": "library",
+    "require": {
+        "php": "^7.2.5|^8.0",
+        "ext-json": "^1.7",
+        "illuminate/support": "^7.0",
+        "guzzlehttp/guzzle": "~6.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5.8|^9.3.3"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Wazza\\DomTranslate\\": "src/"
+        },
+        "files": []
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Wazza\\DomTranslate\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Wazza\\DomTranslate\\Providers\\DomTranslateServiceProvider"
+            ]
+        }
+    },
+    "authors": [{
+        "name": "Warren Coetzee",
+        "email": "warren.coetzee@gmail.com"
+    }],
+    "minimum-stability": "dev"
+}
