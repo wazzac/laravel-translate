@@ -17,5 +17,6 @@ The library contains 3 database tables (phrases, translations and languages) tha
 ## Installation
 ```
 composer require wazza/dom-translate
-
+php artisan vendor:publish --tag="dom-translate-config"
+php artisan vendor:publish --tag="dom-translate-migrations"
 ```
