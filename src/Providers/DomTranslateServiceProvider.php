@@ -4,7 +4,7 @@ namespace Wazza\DomTranslate\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Illuminate\Support\Facades\Blade;
-use Wazza\DomTranslate\TranslateController;
+use Wazza\DomTranslate\Controllers\TranslateController;
 
 class DomTranslateServiceProvider extends BaseServiceProvider
 {
@@ -46,7 +46,7 @@ class DomTranslateServiceProvider extends BaseServiceProvider
         });
 
         Blade::directive('transl8', function ($string) {
-            return \Wazza\DomTranslate\TranslateController::phrase($string);
+            return \Wazza\DomTranslate\Controllers\TranslateController::phrase($string);
         });
     }
 
