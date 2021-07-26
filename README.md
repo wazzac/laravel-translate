@@ -27,8 +27,21 @@ php artisan config:cache
 Once installed, start your service again and update your Blade files with the @transl8 directive. Only new un-translated phrases will be translated via the API call. Any future requests, for the same phrase, will be retrieved from the database.
 
 ## Example
-
+Find below a few examples how to use the translate Blade directive in your HTML (Blade) files
 ```
-<p>This phrase is not translated.</p>
-<p>@transl8('This phrase will be automatically translated.')</p>
+<div>
+    {{-- Fully dependant on the source and destination language settings, only provide a phrase --}}
+    <p>@transl8("I like this feature.")</p>
+    {{-- Overwrite the default (1) Destination language by including a second (destination) argument --}}
+    <p>@transl8("We need to test it in the staging environment.","de")</p>
+    {{-- Overwrite the default (1) Source and (2) Destination languages by including a second (destination) and third (source) argument --}}
+    <p>@transl8("Wie weet waar Willem Wouter woon?","af","en")</p>
+    {{-- Use a Blade Language Specific directive for each language --}}
+    <p>@transl8fr("This phrase will be translated to French.")</p>
+    <p>@transl8de("This phrase will be translated to German.")</p>
+    <p>@transl8je("This phrase will be translated to Japanese.")</p>
+    {{-- ...you can update the Laravel AppServiceProvider register() method and add more of you own directives  --}}
+    {{-- ...and lastly, a phrase that will not be translated --}}
+    <p>This phrase will not be translated.</p>
+</div>
 ```
