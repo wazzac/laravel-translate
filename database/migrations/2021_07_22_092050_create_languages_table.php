@@ -85,8 +85,8 @@ class CreateLanguagesTable extends Migration
 
         // loop and insert the language details (@todo - convert to a seed)
         foreach ($languages as $code => $name) {
-            DB::statement("INSERT INTO `domt_languages` (`name`,`code`) VALUES ('{$code}','{$name}')");
-            usleep(50000); // breathe DB, breathe... 1/20 of a second
+            DB::statement("INSERT INTO `domt_languages` (`code`,`name`) VALUES ('{$code}','{$name}')");
+            usleep(50000); // breathe DB, breathe... 1/20 of a second -> not really needed ;)
         }
     }
 
