@@ -26,22 +26,54 @@ php artisan config:cache
 
 Once installed, start your service again and update your Blade files with the @transl8 directive. Only new un-translated phrases will be translated via the API call. Any future requests, for the same phrase, will be retrieved from the database.
 
-## Example
+## HTML Blade Example
 Find below a few examples how to use the translate Blade directive in your HTML (Blade) files
 ```
 <div>
     {{-- Fully dependant on the source and destination language settings, only provide a phrase --}}
     <p>@transl8("I like this feature.")</p>
+    
     {{-- Overwrite the default (1) Destination language by including a second (destination) argument --}}
     <p>@transl8("We need to test it in the staging environment.","de")</p>
+    
     {{-- Overwrite the default (1) Source and (2) Destination languages by including a second (destination) and third (source) argument --}}
     <p>@transl8("Wie weet waar Willem Wouter woon?","af","en")</p>
+    
     {{-- Use a Blade Language Specific directive for each language --}}
     <p>@transl8fr("This phrase will be translated to French.")</p>
     <p>@transl8de("This phrase will be translated to German.")</p>
     <p>@transl8je("This phrase will be translated to Japanese.")</p>
+    
     {{-- ...you can update the Laravel AppServiceProvider register() method and add more of you own directives  --}}
+    
     {{-- ...and lastly, a phrase that will not be translated --}}
     <p>This phrase will not be translated.</p>
 </div>
+```
+
+## Blade Directive Example:
+The below 4 directives are available by default. You are welcome to add more directly in your Laravel `AppServiceProvider` file (under the register() method)
+```
+// (1) Register the default Blade directives
+// With `transl8` you can supply any any destination language. If non is supplied, the default in Config would be used.
+// Format: transl8('Phrase','target','source')
+// Example: transl8('This must be translated to French.','fr')
+Blade::directive('transl8', function ($string) {
+    return \Wazza\DomTranslate\Controllers\TranslateController::phrase($string);
+});
+
+// (2) Register direct (Language specific) Blade directives, all from English
+// (2.1) French Example: transl8fr('This must be translated to French.')
+Blade::directive('transl8fr', function ($string) {
+    return \Wazza\DomTranslate\Controllers\TranslateController::translate($string, "fr", "en");
+});
+// (2.2) German
+Blade::directive('transl8de', function ($string) {
+    return \Wazza\DomTranslate\Controllers\TranslateController::translate($string, "de", "en");
+});
+// (2.3) Japanese
+Blade::directive('transl8je', function ($string) {
+    return \Wazza\DomTranslate\Controllers\TranslateController::translate($string, "je", "en");
+});
+// (2.4) etc. You can create your own in Laravel AppServiceProvider register method.
 ```
