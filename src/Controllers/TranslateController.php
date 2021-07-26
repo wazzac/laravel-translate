@@ -38,8 +38,37 @@ class TranslateController extends Controller
         );
     }
 
+    /**
+     * Function that will receive a single string containing the phrase to be translated as well as the destination and source languages
+     * This would most lickely be used from the Blade custom directive.
+     *
+     * @param string|null $string String containing - "phrase to translate","fr","en" (or single quotes)
+     * @return void
+     */
+    public static function phrase(?string $string = null)
+    {
+        // split the string
+        $arguments = explode(',', $string);
 
-    public static function phrase(?string $source = null, ?string $langdest = null, ?string $langsrc = null)
+        // sanitise the items
+        foreach($arguments as $key => $argument) {
+            $arguments[$key] = self::sanitise($argument);
+        }
+
+        // call the translation method
+        return self::translate($arguments[0] ?? null, $arguments[1] ?? null, $arguments[2] ?? null);
+    }
+
+
+    /**
+     * Primary translation method
+     *
+     * @param string|null $source The phrase to be translated
+     * @param string|null $langdest The destination language code - i.e. fr (defaults would be retrieved from the config file)
+     * @param string|null $langsrc The source language code - i.e. en (defaults would be retrieved from the config file)
+     * @return void
+     */
+    public static function translate(?string $source = null, ?string $langdest = null, ?string $langsrc = null)
     {
         // sanitise the source
         $source = self::sanitise($source);

@@ -45,9 +45,28 @@ class DomTranslateServiceProvider extends BaseServiceProvider
             return new TranslateController();
         });
 
+        // (1) Register the default Blade directives
+        // With `transl8` you can supply any any destination language. If non is supplied, the default in Config would be used.
+        // Format: transl8('Phrase','target','source')
+        // Example: transl8('This must be translated to French.','fr')
         Blade::directive('transl8', function ($string) {
             return \Wazza\DomTranslate\Controllers\TranslateController::phrase($string);
         });
+
+        // (2) Register direct (Language specific) Blade directives, all from English
+        // (2.1) French Example: transl8fr('This must be translated to French.')
+        Blade::directive('transl8fr', function ($string) {
+            return \Wazza\DomTranslate\Controllers\TranslateController::translate($string, "fr", "en");
+        });
+        // (2.2) German
+        Blade::directive('transl8de', function ($string) {
+            return \Wazza\DomTranslate\Controllers\TranslateController::translate($string, "de", "en");
+        });
+        // (2.3) Japanese
+        Blade::directive('transl8je', function ($string) {
+            return \Wazza\DomTranslate\Controllers\TranslateController::translate($string, "je", "en");
+        });
+        // (2.4) etc. You can create your own in Laravel AppServiceProvider register method.
     }
 
     /**
