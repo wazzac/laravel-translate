@@ -87,3 +87,6 @@ Blade::directive('transl8je', function ($string) {
 });
 // (2.4) etc. You can create your own in Laravel AppServiceProvider register method.
 ```
+## Outstanding Development (Backlog)
+- Unit Tests
+- Namespace per API Provider using binding
