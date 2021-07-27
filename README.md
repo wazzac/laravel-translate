@@ -38,6 +38,10 @@ php artisan migrate
 php artisan config:cache
 ```
 
+> **Note:** If you don't have a [Google Cloud Platform](https://cloud.google.com/gcp) account yet, click on the link and sign up. Create a new Project and add the _Cloud Translation API_ to it. You can use [Insomnia](https://insomnia.rest/download) (image below) to test your API key.
+
+<a href="https://ibb.co/R0dwJ78"><img src="https://i.ibb.co/wWjm2Yt/insomnia.png" alt="insomnia" border="0" /></a>
+
 3. Done. Review any configuration file changes that you might want to change. The config file was published to the main config folder.
 
 > All done: Start your service again and update your Blade files with the @transl8 directive. Only new un-translated phrases will be translated via the API call. Any future requests, for the same phrase, will be retrieved from the database.
@@ -73,7 +77,7 @@ Find below a few examples how to use the translate Blade directive in your HTML 
 
 The below 4 directives are available by default (`@transl8()` is the **main one**).
 
-You are welcome to add more directly in your Laravel *AppServiceProvider* file *(under the register() method)*
+You are welcome to add more directly in your Laravel _AppServiceProvider_ file _(under the register() method)_
 
 ```php
 // (1) Register the default Blade directives
@@ -99,6 +103,8 @@ Blade::directive('transl8je', function ($string) {
 });
 // (2.4) etc. You can create your own in Laravel AppServiceProvider register method.
 ```
+
 ## Outstanding Development (Backlog)
-- Unit Tests
-- Namespace per API Provider using binding
+
+- Unit Tests to follow...
+- Namespace per API Provider using Laravel binding
