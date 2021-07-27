@@ -8,35 +8,45 @@
 
 Library that will use the build in Laravel Derictive and provide automated translations to all your blade phrases or words.
 
-## Process
+_Example: Write HTML static data in English and display it in a different language on run time._
 
-The library contains 3 database tables (phrases, translations and languages) that are used to retrieve translations using an indexed hash.
+## Overview
 
-1. Search for a translation using the provided phrase (in the transl8 directive) in the `translations` table.
-2. If found, return and display it on the page.
-3. If not found (ot previously translated), call the Google Translate API endpoint (or any other Provider) to retrieve the correct translation.
+The library contains 3 database tables (_domt_phrases_, _domt_translations_ and _domt_languages_) that are used to retrieve translations using an indexed hash.
+
+1. On page load, the system will search for a specific translation using the provided phrase (in the `@transl8()` directive) in the _domt_translations_ table.
+2. If the translation was found, it will be returned and display on the page _(no API call was made)_.
+3. If no transalation were found _(not previously translated)_, call the Google Translate API endpoint _(or any other Provider)_ to retrieve the correct translation.
 4. Insert the newly translated text into the DB so that we don't have to call the API again for the given phrase _(step 1 above)_.
 
 ## Installation
 
-Follow below steps to install the package
+> PHP 7.2 is a min requirement for this project.
 
-```
+1. Follow below steps to install the package
+
+```bash
 composer require wazza/dom-translate
 php artisan vendor:publish --tag="dom-translate-config"
 php artisan vendor:publish --tag="dom-translate-migrations"
 php artisan migrate
-// add DOM_TRANSLATE_GOOGLE_KEY={key value from Google} to your .env file
+```
+
+2. Add `DOM_TRANSLATE_GOOGLE_KEY={key value from Google}` to your _.env_ file and run...
+
+```bash
 php artisan config:cache
 ```
 
-Once installed, start your service again and update your Blade files with the @transl8 directive. Only new un-translated phrases will be translated via the API call. Any future requests, for the same phrase, will be retrieved from the database.
+3. Done. Review any configuration file changes that you might want to change. The config file was published to the main config folder.
+
+> All done: Start your service again and update your Blade files with the @transl8 directive. Only new un-translated phrases will be translated via the API call. Any future requests, for the same phrase, will be retrieved from the database.
 
 ## HTML Blade Example
 
 Find below a few examples how to use the translate Blade directive in your HTML (Blade) files.
 
-```
+```blade
 <div>
     {{-- Fully dependant on the source and destination language settings, only provide a phrase (this is the default way) --}}
     <p>@transl8("I like this feature.")</p>
@@ -61,9 +71,11 @@ Find below a few examples how to use the translate Blade directive in your HTML 
 
 ## Blade Directive Example:
 
-The below 4 directives are available by default (`transl8` is the main one). You are welcome to add more directly in your Laravel `AppServiceProvider` file (under the register() method)
+The below 4 directives are available by default (`@transl8()` is the **main one**).
 
-```
+You are welcome to add more directly in your Laravel *AppServiceProvider* file *(under the register() method)*
+
+```php
 // (1) Register the default Blade directives
 // With `transl8` you can supply any any destination language. If non is supplied, the default in Config would be used.
 // Format: transl8('Phrase','target','source')
