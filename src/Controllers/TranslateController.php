@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Wazza\DomTranslate\Phrase;
 use Wazza\DomTranslate\Language;
 use Wazza\DomTranslate\Translation;
+use Wazza\DomTranslate\Controllers\LogController;
 
 class TranslateController extends Controller
 {
@@ -51,7 +52,7 @@ class TranslateController extends Controller
         $arguments = explode(',', $string);
 
         // sanitise the items
-        foreach($arguments as $key => $argument) {
+        foreach ($arguments as $key => $argument) {
             $arguments[$key] = self::sanitise($argument);
         }
 
@@ -70,21 +71,28 @@ class TranslateController extends Controller
      */
     public static function translate(?string $source = null, ?string $langdest = null, ?string $langsrc = null)
     {
+        LogController::log('notice', 1, 'New phrase to translate. ' . substr($source, 0, 15)); // high = 1
+        LogController::log('notice', 2, 'Full Phrase: ' . $source); // mid = 2
+
         // sanitise the source
         $source = self::sanitise($source);
+        LogController::log('notice', 3, 'Phrase Sanitised: ' . $source); // low = 3
 
         // hash the source
         $srcHash = self::hash($source);
+        LogController::log('notice', 3, 'Phrase Hash: ' . $srcHash); // low = 3
 
         // do we have a destination language defined
         if (empty($langdest)) {
             $langdest = config('dom_translate.language.dest');
         }
+        LogController::log('notice', 2, 'Destination language code set as: ' . $langdest);
 
         // do we have a source language defined
         if (empty($langsrc)) {
             $langsrc = config('dom_translate.language.src');
         }
+        LogController::log('notice', 2, 'Source language code set as: ' . $langdest);
 
         // ok, ready to rock-and-roll... here we go!
         try {
@@ -102,8 +110,11 @@ class TranslateController extends Controller
             // did we locate a direct translation?
             if (!is_null($translation)) {
                 // yes we did - awesome... return it.
+                LogController::log('notice', 1, 'Translation located in DB.');
+                LogController::log('notice', 2, 'Translated text: ' . $translation->value);
                 return $translation->value;
             }
+            LogController::log('notice', 1, 'Translation NOT located in DB.');
 
             // (2) We could not find a direct translation in the DB... We need to call the API
             // (2.1) ... first see if we have the correct Phrase
@@ -123,8 +134,17 @@ class TranslateController extends Controller
                     $phrase->hash = $srcHash;
                     $phrase->value = $source;
                     $phrase->save();
+                    LogController::log('notice', 1, 'New Phrase saved.');
+                }
+                else {
+                    LogController::log('warning', 1, 'Phrase could not be inserted into DB because the source language could not be loaded.');
                 }
             }
+            else {
+                LogController::log('notice', 2, 'Phrase already in DB.');
+            }
+
+            LogController::log('notice', 1, 'Call API for Translation.');
 
             // (2.2) ...ok, we have a Phrase... Let's get the correct Translation and insert it into the DB
             $defaultProvider = config('dom_translate.api.provider');
@@ -152,15 +172,19 @@ class TranslateController extends Controller
 
             // convert body response (json) to array
             $responseBody = json_decode($apiResponse->getBody(), true); // json decode to array
+            LogController::log('notice', 3, 'API response:', $responseBody);
 
             // inspect result
             if ($apiResponse->getStatusCode() != 200) {
-                // something went wrong
-                return '[' . $responseBody['code'] ?? 500 . '] ' . $responseBody['message'] ?? 'Unknown error';
+                // something went wrong with the API call
+                LogController::log('error', 1, 'API Error: ' . $responseBody['message'] ?? 'Unknown error' . "; Returning original phrase.");
+                return $source;
             }
 
             // great, we received 200 back... lets add the translation to the translations table (if we can find it)
             if (isset($responseBody['data']['translations'][0]['translatedText'])) {
+                LogController::log('notice', 1, 'Translation located via API.');
+
                 // find the language id
                 $langDest = Language::select('id')->where('code', $langdest)->first();
 
@@ -171,16 +195,21 @@ class TranslateController extends Controller
                     $translation->phrase_id = $phrase->id;
                     $translation->value = $responseBody['data']['translations'][0]['translatedText'];
                     $translation->save();
+                    LogController::log('notice', 1, 'Translation inserted into DB.');
+                } else {
+                    LogController::log('warning', 1, 'Translation could not be inserted into DB because the destincation language could not be loaded.');
                 }
 
                 // all good
-                return $responseBody['data']['translations'][0]['translatedText'];
+                return trim($responseBody['data']['translations'][0]['translatedText']);
             }
 
             // as a very last option, return the original source content
+            LogController::log('warning', 1, 'No Translation returned from the API. Returning original phrase.');
             return $source;
         } catch (Exception $e) {
             // something went wrong, return the source and log the error
+            LogController::log('error', 1, 'Exception: ' . $e->getMessage());
             return $source;
         }
     }

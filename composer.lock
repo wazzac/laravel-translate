@@ -440,12 +440,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "dad1ee0c17daac295ab225bcc24a1a8f1582a40e"
+                "reference": "48ebff252df4d3b60ecb8e2583f79dfba6b56bc8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/dad1ee0c17daac295ab225bcc24a1a8f1582a40e",
-                "reference": "dad1ee0c17daac295ab225bcc24a1a8f1582a40e",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/48ebff252df4d3b60ecb8e2583f79dfba6b56bc8",
+                "reference": "48ebff252df4d3b60ecb8e2583f79dfba6b56bc8",
                 "shasum": ""
             },
             "require": {
@@ -527,7 +527,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-12T20:36:07+00:00"
+            "time": "2021-07-28T08:28:41+00:00"
         },
         {
             "name": "psr/container",
@@ -1216,12 +1216,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "9338547c7777216541f2842b6bb967ff781cad45"
+                "reference": "6cbb2e712c1fc31a646305a2c28964970ff66596"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/9338547c7777216541f2842b6bb967ff781cad45",
-                "reference": "9338547c7777216541f2842b6bb967ff781cad45",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/6cbb2e712c1fc31a646305a2c28964970ff66596",
+                "reference": "6cbb2e712c1fc31a646305a2c28964970ff66596",
                 "shasum": ""
             },
             "require": {
@@ -1304,7 +1304,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-25T15:20:47+00:00"
+            "time": "2021-07-27T17:15:07+00:00"
         },
         {
             "name": "symfony/translation-contracts",
@@ -2308,12 +2308,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "1c9fbeed12be364fc04de1566f1e5291fac2fa9f"
+                "reference": "d1690a1b393e7d10c484d9b925458aee4a67b842"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1c9fbeed12be364fc04de1566f1e5291fac2fa9f",
-                "reference": "1c9fbeed12be364fc04de1566f1e5291fac2fa9f",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/d1690a1b393e7d10c484d9b925458aee4a67b842",
+                "reference": "d1690a1b393e7d10c484d9b925458aee4a67b842",
                 "shasum": ""
             },
             "require": {
@@ -2403,7 +2403,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-07-25T08:45:44+00:00"
+            "time": "2021-07-28T05:54:21+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -3453,16 +3453,16 @@
         },
         {
             "name": "theseer/tokenizer",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/theseer/tokenizer.git",
-                "reference": "75a63c33a8577608444246075ea0af0d052e452a"
+                "reference": "34a41e998c2183e22995f158c581e7b5e755ab9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/75a63c33a8577608444246075ea0af0d052e452a",
-                "reference": "75a63c33a8577608444246075ea0af0d052e452a",
+                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/34a41e998c2183e22995f158c581e7b5e755ab9e",
+                "reference": "34a41e998c2183e22995f158c581e7b5e755ab9e",
                 "shasum": ""
             },
             "require": {
@@ -3491,7 +3491,7 @@
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
             "support": {
                 "issues": "https://github.com/theseer/tokenizer/issues",
-                "source": "https://github.com/theseer/tokenizer/tree/master"
+                "source": "https://github.com/theseer/tokenizer/tree/1.2.1"
             },
             "funding": [
                 {
@@ -3499,7 +3499,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-07-12T23:59:07+00:00"
+            "time": "2021-07-28T10:34:58+00:00"
         },
         {
             "name": "webmozart/assert",
