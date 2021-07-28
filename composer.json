@@ -1,6 +1,6 @@
 {
     "name": "wazza/dom-translate",
-    "description": "Client Library to translate an HTML page before rendering it to the page.",
+    "description": "A Laravel Package that will use the build-in Blade Directive to define specific phrases for auto-translation before being rendered to the screen.",
     "type": "library",
     "require": {
         "php": "^7.2.5|^8.0",
