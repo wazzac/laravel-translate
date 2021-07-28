@@ -2,8 +2,8 @@
 // return config
 return [
     'logging' => [
-        'level' => 0, // 0=None; 1=High-Level; 2=Mid-Level or 3=Low-Level
-        'indicator' => "dom-translate", // Log indicator to find items in the log file.
+        'level' => env('DOM_TRANSLATE_LOG_LEVEL', 3), // 0=None; 1=High-Level; 2=Mid-Level or 3=Low-Level
+        'indicator' => env('DOM_TRANSLATE_LOG_INDICATOR', 'dom-translate'), // Log indicator to find items in the log file.
     ],
     'api' => [
         'provider' => env('DOM_TRANSLATE_PROVIDER', 'google'),
