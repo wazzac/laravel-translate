@@ -40,7 +40,9 @@ php artisan config:cache
 
 > **Note:** If you don't have a [Google Cloud Platform](https://cloud.google.com/gcp) account yet, click on the link and sign up. Create a new Project and add the _Cloud Translation API_ to it. You can use [Insomnia](https://insomnia.rest/download) (image below) to test your API key.
 
-<a href="https://ibb.co/R0dwJ78"><img src="https://i.ibb.co/wWjm2Yt/insomnia.png" alt="insomnia" border="0" /></a>
+<a href="https://ibb.co/R0dwJ78" target="_blank">
+    <img src="https://i.ibb.co/wWjm2Yt/insomnia.png" alt="insomnia" border="0" width="100%" />
+</a>
 
 3. Done. Review any configuration file changes that you might want to change. The config file was published to the main config folder.
 
@@ -66,7 +68,7 @@ Find below a few examples how to use the translate Blade directive in your HTML 
     <p>@transl8de("This phrase will be translated to German.")</p>
     <p>@transl8je("This phrase will be translated to Japanese.")</p>
 
-    {{-- ...you can update the Laravel AppServiceProvider register() method and add more of you own directives  --}}
+    {{-- ...you can update the Laravel AppServiceProvider register() method and add more of you own directives but ultimately the default @transl8() should be sufficient --}}
 
     {{-- ...and lastly, a phrase that will not be translated --}}
     <p>This phrase will not be translated.</p>
@@ -80,28 +82,29 @@ The below 4 directives are available by default (`@transl8()` is the **main one*
 You are welcome to add more directly in your Laravel _AppServiceProvider_ file _(under the register() method)_
 
 ```php
-// (1) Register the default Blade directives
-// With `transl8` you can supply any any destination language. If non is supplied, the default in Config would be used.
-// Format: transl8('Phrase','target','source')
-// Example: transl8('This must be translated to French.','fr')
+// (1) Register the DEFAULT Blade Directives - @transl8()
+// With `transl8`, only the first argument is required (phrase).
+// If you do not supply the destination or source languages, the default values would be sourced from the Config file.
+// -- Format: transl8('Phrase','target','source')
+// -- Example: transl8('This must be translated to French.','fr')
 Blade::directive('transl8', function ($string) {
     return \Wazza\DomTranslate\Controllers\TranslateController::phrase($string);
 });
 
-// (2) Register direct (Language specific) Blade directives, all from English
-// (2.1) French Example: transl8fr('This must be translated to French.')
+// (2) Register DIRECT (language specific) Blade directives, all from English (source)
+// (2.1) French - @transl8fr('phrase')
 Blade::directive('transl8fr', function ($string) {
     return \Wazza\DomTranslate\Controllers\TranslateController::translate($string, "fr", "en");
 });
-// (2.2) German
+// (2.2) German - @transl8de('phrase')
 Blade::directive('transl8de', function ($string) {
     return \Wazza\DomTranslate\Controllers\TranslateController::translate($string, "de", "en");
 });
-// (2.3) Japanese
+// (2.3) Japanese - @transl8je('phrase')
 Blade::directive('transl8je', function ($string) {
     return \Wazza\DomTranslate\Controllers\TranslateController::translate($string, "je", "en");
 });
-// (2.4) etc. You can create your own in Laravel AppServiceProvider register method.
+// (2.4) etc. You can create your own in Laravel's AppServiceProvider register() method, but ultimately the default @transl8() should be sufficient.
 ```
 
 ## Outstanding Development (Backlog)
