@@ -34,5 +34,5 @@
         "name": "Warren Coetzee",
         "email": "warren.coetzee@gmail.com"
     }],
-    "minimum-stability": "dev"
+    "minimum-stability": "v0.5"
 }
