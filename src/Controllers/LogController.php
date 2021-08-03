@@ -25,7 +25,7 @@ final class LogController
             // make sure the method is allowed
             if (in_array($type, ['alert', 'critical', 'debug', 'emergency', 'error', 'info', 'notice', 'warning'])) {
                 // log...
-                Log::$type('[' . $logConf['indicator'] ?? 'dom-translate' . '] ' . $string, $context);
+                Log::$type('[' . $logConf['indicator'] . '] ' . $string, $context);
             }
         }
 
