@@ -42,4 +42,26 @@ class phraseHelper
             config('dom_translate.hash.salt')
         );
     }
+
+    /**
+     * Return the correctly defined Destination Language Code
+     *
+     * @param string $destCode
+     * @return string
+     */
+    public static function prepDestLanguage(?string $destCode = null)
+    {
+        return trim(strtolower(!empty($destCode) ? $destCode : config('dom_translate.language.dest')));
+    }
+
+    /**
+     * Return the correctly defined Source Language Code
+     *
+     * @param string $srcCode
+     * @return string
+     */
+    public static function prepSrcLanguage(?string $srcCode = null)
+    {
+        return trim(strtolower(!empty($srcCode) ? $srcCode : config('dom_translate.language.src')));
+    }
 }
