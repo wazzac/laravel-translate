@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Wazza\DomTranslate\Tests\Feature;
 
 use PHPUnit\Framework\TestCase;
 
@@ -13,6 +13,6 @@ class GoogleTranslateApiTest extends TestCase
      */
     public function testGoogleApiConnect()
     {
-
+        $this->assertTrue(true); // logic to follow
     }
 }

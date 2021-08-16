@@ -84,8 +84,9 @@ class CreateLanguagesTable extends Migration
         ];
 
         // loop and insert the language details (@todo - convert to a seed)
+        $currentDate = Carbon\Carbon::now();
         foreach ($languages as $code => $name) {
-            DB::statement("INSERT INTO `domt_languages` (`code`,`name`,`created_at`,`updated_at`) VALUES ('{$code}','{$name}', NOW(), NOW())");
+            DB::statement("INSERT INTO `domt_languages` (`code`,`name`,`created_at`,`updated_at`) VALUES ('{$code}','{$name}', '{$currentDate}', '{$currentDate}')");
             usleep(50000); // breathe DB, breathe... 1/20 of a second -> not really needed ;)
         }
     }

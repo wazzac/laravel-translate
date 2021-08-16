@@ -42,6 +42,19 @@ class Phrase extends Model
     }
 
     /* --------------------- */
+    /* -- Count ------------ */
+
+    /**
+     * Return a count of linked Translations
+     *
+     * @return integer
+     */
+    public function countTranslations()
+    {
+        return $this->translations()->count();
+    }
+
+    /* --------------------- */
     /* -- ADD Translation -- */
 
     /**

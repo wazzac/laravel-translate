@@ -20,7 +20,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Translation::class, function (Faker $faker) {
     return [
-        'language_id' => config('dom_translate.language.dest'),
+        'language_id' => Language::inRandomOrder()->first(),
         'phrase_id' => Phrase::inRandomOrder()->first(),
         'value' => $faker->sentence(40),
         'created_at' => Carbon\Carbon::now(),

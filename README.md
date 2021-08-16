@@ -111,3 +111,9 @@ Blade::directive('transl8je', function ($string) {
 
 - Unit Tests to follow...
 - Namespace per API Provider using Laravel binding
+
+## Run local tests
+
+```
+.\vendor\bin\phpunit
+```

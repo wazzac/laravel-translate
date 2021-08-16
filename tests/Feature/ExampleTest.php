@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Wazza\DomTranslate\Tests\Feature;
 
 use PHPUnit\Framework\TestCase;
 
