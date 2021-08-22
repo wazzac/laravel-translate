@@ -109,8 +109,8 @@ Blade::directive('transl8je', function ($string) {
 
 ## Outstanding Development (Backlog)
 
-- Unit Tests to follow...
-- Namespace per API Provider using Laravel binding
+- More Unit Tests to follow...
+- Namespace per API Provider using Laravel binding. We have Google Translate, possible additions: Bing Translate, etc.
 
 ## Run local tests
 
