@@ -17,7 +17,7 @@ return [
             'controller' => "Wazza\DomTranslate\Controllers\ApiTranslate\GoogleTranslate",
             'endpoint' => "https://www.googleapis.com/language/translate/v2",
             'action' => "POST",
-            'key' => env('DOM_TRANSLATE_GOOGLE_KEY'), // https://console.cloud.google.com/apis/credentials
+            'key' => env('DOM_TRANSLATE_GOOGLE_KEY', null), // https://console.cloud.google.com/apis/credentials
         ],
         // @todo - for developers wanting to contibute:
         // fork the project and add more translate providers here... (and their \ApiTranslate\Class implementing CloudTranslateInterface)

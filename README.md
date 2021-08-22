@@ -117,3 +117,5 @@ Blade::directive('transl8je', function ($string) {
 ```
 .\vendor\bin\phpunit
 ```
+**Important:** For the final 2 assert Tests to work, you would have to add your own personal [Google Translate key](https://console.cloud.google.com/apis/credentials)
+as DOM_TRANSLATE_GOOGLE_KEY=xxx in .env

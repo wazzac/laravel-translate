@@ -2,16 +2,16 @@
 
 namespace Wazza\DomTranslate\Controllers;
 
-use App\Http\Controllers\Controller;
+use Wazza\DomTranslate\Controllers\BaseController;
+use Wazza\DomTranslate\Controllers\LogController;
 use Illuminate\Support\Facades\App;
 use Wazza\DomTranslate\Phrase;
 use Wazza\DomTranslate\Language;
 use Wazza\DomTranslate\Translation;
 use Wazza\DomTranslate\Helpers\phraseHelper;
-use Wazza\DomTranslate\Controllers\LogController;
 use Exception;
 
-class TranslateController extends Controller
+class TranslateController extends BaseController
 {
     /**
      * Function that will receive a single string containing the phrase to be translated as well as the destination and source languages
@@ -170,6 +170,8 @@ class TranslateController extends Controller
             return $translatedString;
         } catch (Exception $e) {
             // something went wrong, return the source and log the error
+            die($e->getMessage());
+
             LogController::log('error', 1, 'Exception Error: ' . $e->getMessage());
             return $srcPhrase;
         }

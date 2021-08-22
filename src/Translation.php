@@ -40,4 +40,17 @@ class Translation extends Model
     {
         return $this->belongsTo(Phrase::class, 'phrase_id', 'id');
     }
+
+    /* --------------------- */
+    /* -- Count ------------ */
+
+    /**
+     * Return a count of Translations
+     *
+     * @return integer
+     */
+    public function countTranslations()
+    {
+        return $this->count();
+    }
 }

@@ -2,8 +2,6 @@
 
 namespace Wazza\DomTranslate\Tests;
 
-use Wazza\DomTranslate\Providers\DomTranslateServiceProvider;
-
 class TestCase extends \Orchestra\Testbench\TestCase
 {
     protected function setUp(): void
@@ -18,7 +16,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
     protected function getPackageProviders($app)
     {
         return [
-            DomTranslateServiceProvider::class,
+            \Wazza\DomTranslate\Providers\DomTranslateServiceProvider::class,
         ];
     }
 
@@ -29,5 +27,14 @@ class TestCase extends \Orchestra\Testbench\TestCase
             'driver' => 'sqlite',
             'database' => ':memory:'
         ]);
+        $app['config']->set('dom_translate.logging.level', 0);
+        $app['config']->set('dom_translate.logging.indicator', 'test-logs');
+    }
+
+    protected function getPackageAliases($app)
+    {
+        return [
+            'config' => 'Illuminate\Config\Repository'
+        ];
     }
 }
