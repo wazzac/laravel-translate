@@ -109,8 +109,24 @@ Blade::directive('transl8je', function ($string) {
 
 ## Outstanding Development (Backlog)
 
-- More Unit Tests to follow...
-- Namespace per API Provider using Laravel binding. We have Google Translate, possible additions: Bing Translate, etc.
+- Create an alternative Translation Engine/s. Google Translate is currenlty the only supported option via `Wazza\DomTranslate\Controllers\ApiTranslate\GoogleTranslate()`. Other possible options: 'NLP Translation', 'Microsoft Translator', etc. (Important: Add the Translation path to the config file - see below) 
+
+```php
+    // line 14 in 'wazza\dom-translate\config\dom_translate.php'
+    // 3rd party translation service providers.
+    'api' => [
+        'provider' => env('DOM_TRANSLATE_PROVIDER', 'google'),
+        'google' => [
+            'controller' => "Wazza\DomTranslate\Controllers\ApiTranslate\GoogleTranslate",
+            'endpoint' => "https://www.googleapis.com/language/translate/v2",
+            'action' => "POST",
+            'key' => env('DOM_TRANSLATE_GOOGLE_KEY', null), // https://console.cloud.google.com/apis/credentials
+        ],
+        // @todo - for developers wanting to contibute:
+        // fork the project and add more translate providers here... (and their \ApiTranslate\Class implementing CloudTranslateInterface)
+        // ... thanks ;)
+    ],
+```
 
 ## Run local tests
 
