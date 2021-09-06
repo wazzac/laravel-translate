@@ -170,8 +170,6 @@ class TranslateController extends BaseController
             return $translatedString;
         } catch (Exception $e) {
             // something went wrong, return the source and log the error
-            die($e->getMessage());
-
             LogController::log('error', 1, 'Exception Error: ' . $e->getMessage());
             return $srcPhrase;
         }
