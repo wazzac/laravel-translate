@@ -21,7 +21,7 @@ The library contains 3 database tables (_domt_phrases_, _domt_translations_ and 
 
 ## Installation
 
-> PHP 7.2 is a min requirement for this project.
+> PHP 8.0 is a min requirement for this project.
 
 1. Follow below steps to install the package
 
@@ -109,7 +109,7 @@ Blade::directive('transl8je', function ($string) {
 
 ## Outstanding Development (Backlog)
 
-- Create an alternative Translation Engine/s. Google Translate is currenlty the only supported option via `Wazza\DomTranslate\Controllers\ApiTranslate\GoogleTranslate()`. Other possible options: 'NLP Translation', 'Microsoft Translator', etc. (Important: Add the Translation path to the config file - see below) 
+- Create an alternative Translation Engine/s. Google Translate is currenlty the only supported option via `Wazza\DomTranslate\Controllers\ApiTranslate\GoogleTranslate()`. Other possible options: 'NLP Translation', 'Microsoft Translator', etc. (Important: Add the Translation path to the config file - see below)
 
 ```php
     // line 14 in 'wazza\dom-translate\config\dom_translate.php'

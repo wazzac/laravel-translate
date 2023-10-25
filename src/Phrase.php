@@ -24,7 +24,7 @@ class Phrase extends Model
     ];
 
     /**
-     * Method to return a 'one-to-many' reltionship. All Translations for a given Phrase
+     * Method to return a 'one-to-many' relationship. All Translations for a given Phrase
      * @return type
      */
     public function translations()

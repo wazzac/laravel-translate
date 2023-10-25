@@ -3,7 +3,6 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use Wazza\DomTranslate\Phrase;
-use Wazza\DomTranslate\Controllers\TranslateController;
 use Faker\Generator as Faker;
 
 /*

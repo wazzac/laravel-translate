@@ -3,14 +3,15 @@
     "description": "A Laravel Package that will use the build-in Blade Directive to define specific phrases for auto-translation before being rendered to the screen.",
     "type": "library",
     "require": {
-        "php": "^7.2.5|^8.0",
+        "php": "^8.0",
         "ext-json": "*",
-        "illuminate/support": "^7.0",
+        "illuminate/support": "~9",
         "guzzlehttp/guzzle": "^7.4"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.9.1",
-        "orchestra/testbench": "^5",
+        "fakerphp/faker": "^1.20.0",
+        "phpunit/phpunit": "~9.0",
+        "orchestra/testbench": "~7",
         "mockery/mockery": "^1.2"
     },
     "license": "MIT",
@@ -29,12 +30,16 @@
         "laravel": {
             "providers": [
                 "Wazza\\DomTranslate\\Providers\\DomTranslateServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "DomTranslate": "Wazza\\DomTranslate\\Facades\\DomTranslate"
+            }
         }
     },
     "authors": [{
         "name": "Warren Coetzee",
-        "email": "warren.coetzee@gmail.com"
+        "email": "warren.coetzee@gmail.com",
+        "homepage": "https://www.wazzac.dev"
     }],
     "scripts": {
         "post-autoload-dump": [

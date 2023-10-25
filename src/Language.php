@@ -24,7 +24,7 @@ class Language extends Model
     ];
 
     /**
-     * Method to return a 'one-to-many' reltionship. All Phrases for a given Language
+     * Method to return a 'one-to-many' relationship. All Phrases for a given Language
      * @return type
      */
     public function phrases()
@@ -33,7 +33,7 @@ class Language extends Model
     }
 
     /**
-     * Method to return a 'one-to-many' reltionship. All Translations for a given Language
+     * Method to return a 'one-to-many' relationship. All Translations for a given Language
      * @return type
      */
     public function translations()

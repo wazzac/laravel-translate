@@ -14,7 +14,7 @@ class DomTranslateServiceProvider extends BaseServiceProvider
      *
      * @return  void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->publishes(
             [$this->configPath() => config_path('dom_translate.php')],
@@ -34,7 +34,7 @@ class DomTranslateServiceProvider extends BaseServiceProvider
      *
      * @return  void
      */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(
             $this->configPath(),
@@ -67,6 +67,7 @@ class DomTranslateServiceProvider extends BaseServiceProvider
             return \Wazza\DomTranslate\Controllers\TranslateController::translate($string, "je", "en");
         });
         // (2.4) etc. You can create your own in Laravel AppServiceProvider register method.
+        // ...
     }
 
     /**
@@ -74,7 +75,7 @@ class DomTranslateServiceProvider extends BaseServiceProvider
      *
      * @return string
      */
-    private function configPath()
+    private function configPath(): string
     {
         return __DIR__ . '/../../config/dom_translate.php';
     }
@@ -84,7 +85,7 @@ class DomTranslateServiceProvider extends BaseServiceProvider
      *
      * @return string
      */
-    private function dbMigrationsPath()
+    private function dbMigrationsPath(): string
     {
         return __DIR__ . '/../../database/migrations';
     }
