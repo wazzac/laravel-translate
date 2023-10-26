@@ -1,6 +1,6 @@
 <?php
 
-namespace Wazzac\DomTranslate\Facades;
+namespace Wazza\DomTranslate\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
