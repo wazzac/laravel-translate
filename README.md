@@ -38,6 +38,21 @@ php artisan migrate
 php artisan config:cache
 ```
 
+Example below of all the supported env keys that can be added with their current default values if not given. The `KEY` (i.e. `DOM_TRANSLATE_GOOGLE_KEY`) items are required.
+
+```
+DOM_TRANSLATE_USE_SESSION=true
+DOM_TRANSLATE_LOG_LEVEL=3
+DOM_TRANSLATE_LOG_INDICATOR=dom-translate
+DOM_TRANSLATE_PROVIDER=google
+DOM_TRANSLATE_GOOGLE_KEY=
+DOM_TRANSLATE_BING_KEY=
+DOM_TRANSLATE_HASH_SALT=DzBQ2DxKhNaF
+DOM_TRANSLATE_HASH_ALGO=sha256
+DOM_TRANSLATE_LANG_SRC=en
+DOM_TRANSLATE_LANG_DEST=af
+```
+
 > **Note:** If you don't have a [Google Cloud Platform](https://cloud.google.com/gcp) account yet, click on the link and sign up. Create a new Project and add the _Cloud Translation API_ to it. You can use [Insomnia](https://insomnia.rest/download) (image below) to test your API key.
 
 <a href="https://ibb.co/R0dwJ78" target="_blank">
@@ -133,5 +148,6 @@ Blade::directive('transl8je', function ($string) {
 ```
 .\vendor\bin\phpunit
 ```
+
 **Important:** For the final 2 assert Tests to work, you would have to add your own personal [Google Translate key](https://console.cloud.google.com/apis/credentials)
-as DOM_TRANSLATE_GOOGLE_KEY=xxx in .env
+as DOM_TRANSLATE_GOOGLE_KEY=xxx in .env (at the time of writing there was a free options available)
