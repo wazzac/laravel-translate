@@ -3,8 +3,6 @@
 namespace Wazza\DomTranslate\Tests\Unit;
 
 use Wazza\DomTranslate\Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Wazza\DomTranslate\Phrase;
 use Wazza\DomTranslate\Translation;
 
@@ -15,91 +13,86 @@ class PhraseTest extends TestCase
         parent::setUp();
     }
 
-    /**
-     * Test the ability to add a translation to a phrase
-     * @return void
-     */
     public function testAssociateTranslationToPhrase()
     {
-        // given (input)
-        $phrase = factory(Phrase::class)->create();
-        $translationOne = factory(Translation::class)->create(['language_id' => 2]);
-        $translationTwo = factory(Translation::class)->create(['language_id' => 3]);
+        /**
+         * @var Phrase $phrase
+         */
+        $phrase = Phrase::factory()->create();
 
-        // when (read)
+        /**
+         * @var Translation $translationOne
+         */
+        $translationOne = Translation::factory()->create(['language_id' => 2]);
+
+        /**
+         * @var Translation $translationTwo
+         */
+        $translationTwo = Translation::factory()->create(['language_id' => 3]);
+
+        // when
         $phrase->addTranslation($translationOne);
         $phrase->addTranslation($translationTwo);
 
-        // then (compare)
-        $this->assertEquals(2, $phrase->countTranslations()); // there should be 2
+        // then
+        $this->assertEquals(2, $phrase->translations()->count());
     }
 
-    /**
-     * Test the ability to add multiple translations to a phrase
-     * @return void
-     */
     public function testAssociateMultipleTranslationsToPhrase()
     {
-        // given (input)
-        $phrase = factory(Phrase::class)->create();
-        $translationOne = factory(Translation::class)->create(['language_id' => 4]); // single
-        $translationTwo = factory(Translation::class)->create(['language_id' => 5]); // single
-        $translationMultiple = factory(Translation::class, 3)->create(); // multiple (collection)
+        // given
+        $phrase = Phrase::factory()->create();
+        $translationOne = Translation::factory()->create(['language_id' => 4]);
+        $translationTwo = Translation::factory()->create(['language_id' => 5]);
+        $translationMultiple = Translation::factory()->count(3)->create();
 
-        // when (read)
-        $phrase->addTranslation($translationOne); // insert single into singular
-        $phrase->addTranslations($translationTwo); // insert single into plural
-        $phrase->addTranslations($translationMultiple); // insert multiple into plural
+        // when
+        $phrase->addTranslation($translationOne);
+        $phrase->addTranslation($translationTwo);
+        $phrase->addTranslations($translationMultiple);
 
-        // then (compare)
-        $this->assertEquals(5, $phrase->countTranslations()); // there should be 5...
+        // then
+        $this->assertEquals(5, $phrase->translations()->count());
     }
 
-    /**
-     * Test the ability to remove a translation (and multiple) from a phrase
-     * @return void
-     */
     public function testDissociateTranslationFromPhrase()
     {
         // given
-        $phrase = factory(Phrase::class)->create();
-        $translationOne = factory(Translation::class)->create(); // single
-        $translationTwo = factory(Translation::class)->create(); // single
-        $translationThree = factory(Translation::class)->create(); // single
-        $translationMany = factory(Translation::class, 5)->create(); // multiple (5)
+        $phrase = Phrase::factory()->create();
+        $translationOne = Translation::factory()->create();
+        $translationTwo = Translation::factory()->create();
+        $translationThree = Translation::factory()->create();
+        $translationMany = Translation::factory()->count(5)->create();
 
         // when
-        $phrase->addTranslation($translationOne); // will remain
-        $phrase->addTranslation($translationTwo); // will be removed
-        $phrase->addTranslation($translationThree); // will remain
-        $phrase->addTranslations($translationMany); // will all be removed
-        $this->assertEquals(8, $phrase->countTranslations()); // full count = 8
+        $phrase->addTranslation($translationOne);
+        $phrase->addTranslation($translationTwo);
+        $phrase->addTranslation($translationThree);
+        $phrase->addTranslations($translationMany);
 
-        // lets remove a phrase
-        $phrase->removeTranslation($translationTwo); // single
-        $phrase->removeTranslations($translationMany); // multiple (5)
+        $this->assertEquals(8, $phrase->translations()->count());
 
         // then
-        $this->assertEquals(2, $phrase->countTranslations()); // full count = 2
+        $phrase->removeTranslation($translationTwo);
+        $phrase->removeTranslations($translationMany);
+
+        // then
+        $this->assertEquals(2, $phrase->translations()->count());
     }
 
-    /**
-     * Test the ability to remove all translations from a phrase
-     * @return void
-     */
     public function testDissociateAllTranslationsFromPhrase()
     {
         // given
-        $phrase = factory(Phrase::class)->create();
-        $translations = factory(Translation::class, 5)->create();
+        $phrase = Phrase::factory()->create();
+        $translations = Translation::factory()->count(5)->create();
 
         // when
         $phrase->addTranslations($translations);
 
-        // lets remove all
+        // then
         $phrase->removeAllTranslations();
 
         // then
-        $this->assertEquals(0, $phrase->countTranslations());
+        $this->assertEquals(0, $phrase->translations()->count());
     }
 }

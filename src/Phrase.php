@@ -2,12 +2,21 @@
 
 namespace Wazza\DomTranslate;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Database\Factories\PhraseFactory;
 use Wazza\DomTranslate\Translation;
 use Wazza\DomTranslate\Language;
 
 class Phrase extends Model
 {
+    use HasFactory;
+
+    public static function newFactory()
+    {
+        return PhraseFactory::new();
+    }
+
     /**
      * The database table used by the model.
      * @var string
@@ -24,7 +33,7 @@ class Phrase extends Model
     ];
 
     /**
-     * Method to return a 'one-to-many' reltionship. All Translations for a given Phrase
+     * Method to return a 'one-to-many' relationship. All Translations for a given Phrase
      * @return type
      */
     public function translations()

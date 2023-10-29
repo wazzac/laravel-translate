@@ -20,7 +20,9 @@ class BladeTranslateTest extends TestCase
      */
     public function testGenericTranslate()
     {
-        $phrase = "This is a test."; // in default English to German
+        $phrase = "This is a test.";
+
+        // in default English to German
         $translation = TranslateController::translate($phrase, 'de', 'en');
         $this->assertEquals($translation, "Das ist ein Test.");
 
