@@ -1,29 +1,28 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Wazza\DomTranslate\Helpers\phraseHelper;
 use Wazza\DomTranslate\Phrase;
-use Faker\Generator as Faker;
+use Wazza\DomTranslate\Language;
 
-/*
-|--------------------------------------------------------------------------
-| Model Factories
-|--------------------------------------------------------------------------
-|
-| This directory should contain each of the model factory definitions for
-| your application. Factories provide a convenient way to generate new
-| model instances for testing / seeding your application's database.
-|
-*/
+class PhraseFactory extends Factory
+{
+    protected $model = Phrase::class;
 
-$factory->define(Phrase::class, function (Faker $faker) {
-    $phrase = $faker->sentence(40);
-    $hash = \Wazza\DomTranslate\Helpers\phraseHelper::hash($phrase);
-    return [
-        'language_id' => config('dom_translate.language.src'),
-        'hash' => $phrase,
-        'value' => $hash,
-        'created_at' => Carbon\Carbon::now(),
-        'updated_at' => Carbon\Carbon::now(),
-    ];
-});
+    public function definition()
+    {
+        $phrase = $this->faker->sentence(40);
+        $hash = phraseHelper::hash($phrase);
+
+        return [
+            'language_id' => Language::where('code', config('dom_translate.language.src'))->first()->id,
+            'hash' => $hash,
+            'value' => $phrase,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ];
+    }
+}

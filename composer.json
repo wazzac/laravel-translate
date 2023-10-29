@@ -12,7 +12,8 @@
         "fakerphp/faker": "^1.20.0",
         "phpunit/phpunit": "~10",
         "orchestra/testbench": "~8",
-        "mockery/mockery": "^1.2"
+        "mockery/mockery": "^1.2",
+        "laravel/legacy-factories": "~1"
     },
     "license": "MIT",
     "autoload": {
@@ -23,7 +24,10 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Wazza\\DomTranslate\\Tests\\": "tests/"
+            "Wazza\\DomTranslate\\": "src/",
+            "Wazza\\DomTranslate\\Tests\\": "tests/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
         }
     },
     "extra": {

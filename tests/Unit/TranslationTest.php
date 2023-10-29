@@ -3,9 +3,9 @@
 namespace Wazza\DomTranslate\Tests\Unit;
 
 use Wazza\DomTranslate\Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Wazza\DomTranslate\Translation;
+use Wazza\DomTranslate\Phrase;
+use Wazza\DomTranslate\Language;
 
 class TranslationTest extends TestCase
 {
@@ -14,20 +14,18 @@ class TranslationTest extends TestCase
         parent::setUp();
     }
 
-    /**
-     * Test the ability to add a translation to a phrase
-     * @return void
-     */
     public function testTranslationCreation()
     {
         // singular
-        $translation = factory(Translation::class)->create(['value' => 'ping pong']);
-        $this->assertTrue($translation->value == 'ping pong');
+        $translation = Translation::factory()->create(['value' => '(translated text)']);
+        $this->assertTrue($translation->value == '(translated text)');
+
+        // delete
         $translation->delete();
-        $this->assertDeleted($translation);
+        $this->assertModelMissing($translation);
 
         // multiple
-        $translations = factory(Translation::class, 3)->create();
+        $translations = Translation::factory()->count(3)->create();
         $this->assertEquals(3, $translations->count());
     }
 }

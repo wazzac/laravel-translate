@@ -2,12 +2,21 @@
 
 namespace Wazza\DomTranslate;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Database\Factories\TranslationFactory;
 use Wazza\DomTranslate\Phrase;
 use Wazza\DomTranslate\Language;
 
 class Translation extends Model
 {
+    use HasFactory;
+
+    public static function newFactory()
+    {
+        return TranslationFactory::new();
+    }
+
     /**
      * The database table used by the model.
      * @var string
