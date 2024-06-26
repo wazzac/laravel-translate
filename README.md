@@ -1,7 +1,7 @@
 <p align="center">
-<a href="https://github.com/WarrenGIT/domTranslate/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/WarrenGIT/domTranslate"></a>
-<a href="https://github.com/WarrenGIT/domTranslate/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/WarrenGIT/domTranslate"></a>
-<a href="https://github.com/WarrenGIT/domTranslate/blob/main/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/WarrenGIT/domTranslate"></a>
+    <a href="https://github.com/wazzac/domTranslate/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/wazzac/domTranslate"></a>
+    <a href="https://github.com/WarrenGIT/domTranslate/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/wazzac/domTranslate"></a>
+    <a href="https://github.com/WarrenGIT/domTranslate/blob/main/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/WarrenGIT/domTranslate"></a>
 </p>
 
 # domTranslate
@@ -124,7 +124,7 @@ Blade::directive('transl8je', function ($string) {
 
 ## Outstanding Development (Backlog)
 
-- Create an alternative Translation Engine/s. Google Translate is currently the only supported option via `Wazza\DomTranslate\Controllers\ApiTranslate\GoogleTranslate()`. Other possible options that can be added: 'NLP Translation', 'Microsoft Translator', etc. (Important: Add the Translation path to the config file - see below)
+-   Create an alternative Translation Engine/s. Google Translate is currently the only supported option via `Wazza\DomTranslate\Controllers\ApiTranslate\GoogleTranslate()`. Other possible options that can be added: 'NLP Translation', 'Microsoft Translator', etc. (Important: Add the Translation path to the config file - see below)
 
 ```php
     // line 14 in 'wazza\dom-translate\config\dom_translate.php'
