@@ -1,7 +1,16 @@
 # Release Notes
-## v2.0.0 - 2023-10-26
+## v2.1.0 `2024-06-25`
 ### Added
-- **Support for Laravel v10.x:** Updated domTranslate to Laravel.v10 support. (Previous versions v1.x supported Laravel v7, and v2.x supports Laravel v10.)
+- `CODE_OF_CONDUCT.md` file.
+- `CONTRIBUTING.md` file.
+- `SECURITY.md` file.
+
+### Updated
+- Composer packages.
+
+## v2.0.0 `2023-10-26`
+### Added
+- **Support for Laravel v10.x:** Updated domTranslate to Laravel.v10 support. _(Previous versions v1.x supported Laravel v7, and v2.x supports Laravel v10.)_
 - **Additional Blade Directives:** Included more language-specific Blade directives for enhanced translation capabilities. New supported options include:
     ```blade
     {{-- Original --}}
