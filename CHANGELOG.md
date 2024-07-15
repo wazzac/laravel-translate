@@ -1,4 +1,12 @@
 # Release Notes
+## v2.2.0 `2024-07-15`
+### Added
+- Added `DOM_TRANSLATE_USE_DATABASE` to the config file. This will allow you enable or disable the db phrase and translation storage.
+
+### Updated
+- Updated the Readme.md documentation and made a few improvements.
+- General improvements to package logging.
+
 ## v2.1.0 `2024-06-25`
 ### Added
 - `CODE_OF_CONDUCT.md` file.
