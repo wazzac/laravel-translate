@@ -2,7 +2,9 @@
     <a href="https://github.com/wazzac/domTranslate/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/wazzac/domTranslate"></a>
     <a href="https://github.com/WarrenGIT/domTranslate/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/wazzac/domTranslate"></a>
     <a href="https://github.com/WarrenGIT/domTranslate/blob/main/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/WarrenGIT/domTranslate"></a>
+    <a href="https://github.com/WarrenGIT/domTranslate"><img alt="GitHub version" src="https://img.shields.io/github/v/tag/WarrenGIT/domTranslate?label=version&sort=semver"></a>
 </p>
+
 
 # Laravel Translate Package
 
@@ -15,6 +17,7 @@ _Example: Write HTML static data in English and display it in a different langua
 The library uses three database tables (_domt_phrases_, _domt_translations_, and _domt_languages_) to manage translations efficiently.
 
 1.  On page load, the system searches for a specific translation using the provided phrase in the `@transl8()` directive from the _domt_translations_ table.
+    > Laravel generally cache views, so if the content of the entire page didn't change, steps 1 - 4 will not fire as the cached view will simply load.
 2.  If the translation is found, it is returned and displayed on the page without making an API call.
 3.  If the translation is not found _(not translated yet)_, the Google Translate API (or another defined provider) is called to retrieve the new translation.
 4.  The newly translated text is then inserted into the database to avoid future API calls for the same phrase.
@@ -60,7 +63,7 @@ DOM_TRANSLATE_LANG_DEST=af
 -   If no translations are found in the session, or if `DOM_TRANSLATE_USE_SESSION` is `false`, translations will be retrieved from the database, provided they have been previously stored there.
 -   If translations are still not found, or if both `DOM_TRANSLATE_USE_SESSION` and `DOM_TRANSLATE_USE_DATABASE` are `false`, translations will be sourced from a third-party translation service (e.g., Google Translate).
 -   Depending on whether `DOM_TRANSLATE_USE_SESSION` and `DOM_TRANSLATE_USE_DATABASE` are `true`, the retrieved translation will be saved to either the session or the database.
--   We strongly recommend setting `DOM_TRANSLATE_USE_DATABASE` to `true` _(default is `true` if not specified in your .env)_ to ensure we don't make repeated API calls _(also it's slower calling the API verses db/session lookup)_. 
+-   We strongly recommend setting `DOM_TRANSLATE_USE_DATABASE` to `true` _(default is `true` if not specified in your .env)_ to ensure we don't make repeated API calls _(also it's slower calling the API verses db/session lookup)_.
 
 > **Note:** If you don't have a [Google Cloud Platform](https://cloud.google.com/gcp) account, sign up and create a new project. Add the _Cloud Translation API_ to it. You can use [Insomnia](https://insomnia.rest/download) to test your API key.
 

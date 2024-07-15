@@ -48,23 +48,24 @@ class TranslateController extends BaseController
      */
     public static function translate(?string $srcPhrase = null, ?string $destCode = null, ?string $srcCode = null)
     {
+        LogController::log('notice', 1, '----- Translation request start -----');
         LogController::log('notice', 1, 'New phrase to translate.'); // high-level = 1
 
         // sanitise the phrase
         $srcPhrase = phraseHelper::sanitise($srcPhrase);
-        LogController::log('notice', 3, 'Phrase Sanitised: ' . $srcPhrase); // low-level = 3
+        LogController::log('notice', 3, 'Phrase Sanitised ............... : ' . $srcPhrase); // low-level = 3
 
         // hash the phrase
         $srcHash = phraseHelper::hash($srcPhrase);
-        LogController::log('notice', 3, 'Phrase Hashed: ' . $srcHash);
+        LogController::log('notice', 3, 'Phrase Hashed .................. : ' . $srcHash);
 
         // do we have a destination language defined
         $destCode = phraseHelper::prepDestLanguage($destCode);
-        LogController::log('notice', 2, 'Destination language code set as: ' . $destCode);
+        LogController::log('notice', 2, 'Destination language code set as : ' . $destCode);
 
         // do we have a source language defined
         $srcCode = phraseHelper::prepSrcLanguage($srcCode);
-        LogController::log('notice', 2, 'Source language code set as: ' . $srcCode);
+        LogController::log('notice', 2, 'Source language code set as .... : ' . $srcCode);
 
         // ok, ready to rock-and-roll...
         try {
@@ -75,7 +76,7 @@ class TranslateController extends BaseController
 
                 if (session()->has($srcHash . $srcCode . $destCode)) {
                     // session translation located
-                    LogController::log('notice', 1, 'Translation located in Session. Return translation...');
+                    LogController::log('notice', 1, 'Translation located in Session. Returning translation...');
                     return session()->get($srcHash . $srcCode . $destCode);
                 }
             } else {
@@ -104,7 +105,8 @@ class TranslateController extends BaseController
                     LogController::log('notice', 1, 'Translation located in DB. Return translation...');
 
                     // save to session so that future request (for this session) can be returned at step 1 above
-                    if (config('dom_translate.use_session', false) === true) {
+                    if (config('dom_translate.use_session', false) === true && !session()->has($srcHash . $srcCode . $destCode)) {
+                        LogController::log('notice', 2, 'DB Located translation saved to Session.');
                         session()->put($srcHash . $srcCode . $destCode, $translation->value);
                     }
 
