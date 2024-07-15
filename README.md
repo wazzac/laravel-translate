@@ -153,4 +153,4 @@ Run the following command to execute tests:
 .\vendor\bin\phpunit
 ```
 
-**Important:** For the final two assert tests to work, add your personal [Google Translate key](https://console.cloud.google.com/apis/credentials) as `DOM_TRANSLATE_GOOGLE_KEY=xxx` in your `.env` file (free options are available at the time of writing).
+**Important:** For the final two assert tests to work, add your personal [Google Translate key](https://console.cloud.google.com/apis/credentials) as `DOM_TRANSLATE_GOOGLE_KEY=xxx` in your `.env` file (free options are available at the time of writing), or directly in the `phpunit.xml` file under `DOM_TRANSLATE_GOOGLE_KEY`.
