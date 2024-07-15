@@ -56,10 +56,11 @@ DOM_TRANSLATE_LANG_SRC=en
 DOM_TRANSLATE_LANG_DEST=af
 ```
 
--   If DOM_TRANSLATE_USE_SESSION is set to true, translations will be saved in the session and used as the first point of retrieval.
--   If no translations are found in the session, or if DOM_TRANSLATE_USE_SESSION is set to false, translations will be retrieved from the database, provided they have been previously stored there.
--   If translations are still not found, or if both DOM_TRANSLATE_USE_SESSION and DOM_TRANSLATE_USE_DATABASE are set to false, translations will be sourced from a third-party translation service (e.g., Google Translate).
--   Depending on whether DOM_TRANSLATE_USE_SESSION and DOM_TRANSLATE_USE_DATABASE are set to true, the retrieved translation will be saved to either the session or the database.
+-   If `DOM_TRANSLATE_USE_SESSION` is set to true, translations will be saved in the session and used as the first point of retrieval.
+-   If no translations are found in the session, or if `DOM_TRANSLATE_USE_SESSION` is set to false, translations will be retrieved from the database, provided they have been previously stored there.
+-   If translations are still not found, or if both `DOM_TRANSLATE_USE_SESSION` and `DOM_TRANSLATE_USE_DATABASE` are set to false, translations will be sourced from a third-party translation service (e.g., Google Translate).
+-   Depending on whether `DOM_TRANSLATE_USE_SESSION` and DOM_TRANSLATE_USE_DATABASE are set to true, the retrieved translation will be saved to either the session or the database.
+- We strongly recommend setting `DOM_TRANSLATE_USE_DATABASE` to `true` _(default is `true` if not specified in your .env)_ to ensure that we don't make repeated API calls.
 
 > **Note:** If you don't have a [Google Cloud Platform](https://cloud.google.com/gcp) account, sign up and create a new project. Add the _Cloud Translation API_ to it. You can use [Insomnia](https://insomnia.rest/download) to test your API key.
 

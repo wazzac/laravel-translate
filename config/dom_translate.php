@@ -5,7 +5,13 @@ return [
     // This feature adds an additional layer above the normal DB storing functionality,
     // enabling the avoidance of unnecessary DB calls by retrieving translations from the session when available.
     // ------------------------------------------------------------
-    'use_session' => env('DOM_TRANSLATE_USE_SESSION', true),
+    'use_session' => env('DOM_TRANSLATE_USE_SESSION', false),
+
+    // If set to true, 'phrase' => 'translation' pairs will be stored in the database.
+    // This feature enables the storage of translations in the database, allowing for quick retrieval of translations.
+    // By default this should be set to `true` to ensure that we don't make repeated API calls.
+    // ------------------------------------------------------------
+    'use_database' => env('DOM_TRANSLATE_USE_DATABASE', true),
 
     // Determines the level of logging. For production environments, we recommend using either 0 or 1.
     // `level`: 0=None; 1=High-Level; 2=Mid-Level or 3=Low-Level

@@ -9,6 +9,7 @@ use Wazza\DomTranslate\Phrase;
 use Wazza\DomTranslate\Language;
 use Wazza\DomTranslate\Translation;
 use Wazza\DomTranslate\Helpers\phraseHelper;
+use Wazza\DomTranslate\Contracts\CloudTranslateInterface;
 use Exception;
 
 class TranslateController extends BaseController
@@ -67,69 +68,92 @@ class TranslateController extends BaseController
 
         // ok, ready to rock-and-roll...
         try {
+            // ------------------------------------------------------------
             // (1) First search the Session for the unique hash (ideal scenario) - if enabled in config
             if (config('dom_translate.use_session', false) === true) {
+                LogController::log('notice', 3, 'Use Session is enabled. Searching for translation in Session...');
+
                 if (session()->has($srcHash . $srcCode . $destCode)) {
                     // session translation located
                     LogController::log('notice', 1, 'Translation located in Session. Return translation...');
                     return session()->get($srcHash . $srcCode . $destCode);
                 }
+            } else {
+                LogController::log('notice', 3, 'Use Session is disabled. Skipping Session search...');
             }
 
+            // ------------------------------------------------------------
             // (2) Search for the direct Translation in the DB using the Phrase HASH (ok scenario as well)
-            $translation = Translation::select('value')
-                ->whereHas('language', function ($query) use ($destCode) {
-                    $query->where('code', $destCode);
-                })->whereHas('phrase', function ($queryl1) use ($srcHash, $srcCode) {
-                    $queryl1->where('hash', $srcHash);
-                    $queryl1->whereHas('language', function ($queryl2) use ($srcCode) {
-                        $queryl2->where('code', $srcCode);
-                    });
+            if (config('dom_translate.use_database', true) === true) {
+                LogController::log('notice', 3, 'Use Database is enabled. Searching for translation in DB...');
+
+                // try to locate the translation in the DB
+                $translation = Translation::select('value')
+                    ->whereHas('language', function ($query) use ($destCode) {
+                        $query->where('code', $destCode);
+                    })->whereHas('phrase', function ($queryl1) use ($srcHash, $srcCode) {
+                        $queryl1->where('hash', $srcHash);
+                        $queryl1->whereHas('language', function ($queryl2) use ($srcCode) {
+                            $queryl2->where('code', $srcCode);
+                        });
+                    })->first();
+
+                // did we locate a direct translation?
+                if (!is_null($translation)) {
+                    // yes we did - awesome...
+                    LogController::log('notice', 1, 'Translation located in DB. Return translation...');
+
+                    // save to session so that future request (for this session) can be returned at step 1 above
+                    if (config('dom_translate.use_session', false) === true) {
+                        session()->put($srcHash . $srcCode . $destCode, $translation->value);
+                    }
+
+                    // ...and return.
+                    return $translation->value;
+                }
+                LogController::log('notice', 1, 'Translation NOT located in DB. Continue...');
+            } else {
+                LogController::log('notice', 3, 'Use Database is disabled. Skipping DB search...');
+            }
+
+            // ------------------------------------------------------------
+            // We could not find a direct translation in the DB nor Session... We need to call the Cloud API
+            // ------------------------------------------------------------
+
+            // (3) We need to first locate the Phrase in the DB (if enabled in config), and insert it if not found
+            $phrase = null;
+            if (config('dom_translate.use_database', true) === true) {
+                // first see if we have the correct Phrase
+                $phrase = Phrase::where('hash', $srcHash)->whereHas('language', function ($q) use ($srcCode) {
+                    $q->where('code', $srcCode);
                 })->first();
 
-            // did we locate a direct translation?
-            if (!is_null($translation)) {
-                // yes we did - awesome...
-                LogController::log('notice', 1, 'Translation located in DB. Return translation...');
+                // if no phrase were located, insert a new record
+                if (is_null($phrase)) {
+                    LogController::log('notice', 1, 'Could not locate the Phrase in the DB, we would need to insert it.');
 
-                // save to session so that future request (for this session) can be returned at step 1 above
-                if (config('dom_translate.use_session', false) === true) {
-                    session()->put($srcHash . $srcCode . $destCode, $translation->value);
+                    // find the source language id
+                    $languageSrc = Language::select('id')->where('code', $srcCode)->first();
+                    if (is_null($languageSrc)) {
+                        throw new Exception('Phrase could not be inserted into DB because the source language (code: ' . $srcCode . ') could not be loaded.');
+                    }
+
+                    // insert the new phrase into the DB
+                    $phrase = new Phrase();
+                    $phrase->language_id = $languageSrc->id;
+                    $phrase->hash = $srcHash;
+                    $phrase->value = $srcPhrase;
+                    $phrase->save();
+                    LogController::log('notice', 1, 'New Phrase saved in DB as ID - ' . $phrase->id);
+                } else {
+                    LogController::log('notice', 1, 'Phrase located under ID - ' . $phrase->id);
                 }
-
-                // ...and return.
-                return $translation->value;
-            }
-            LogController::log('notice', 1, 'Translation NOT located in DB. Continue...');
-
-            // (3) We could not find a direct translation in the DB... We need to call the Cloud API
-            // (3.1) ... first see if we have the correct Phrase
-            $phrase = Phrase::where('hash', $srcHash)->whereHas('language', function ($q) use ($srcCode) {
-                $q->where('code', $srcCode);
-            })->first();
-
-            // if no phrase were located, insert a new record
-            if (is_null($phrase)) {
-                LogController::log('notice', 1, 'Could not locate the Phrase in the DB, we would need to insert it.');
-
-                // find the source language id
-                $languageSrc = Language::select('id')->where('code', $srcCode)->first();
-                if (is_null($languageSrc)) {
-                    throw new Exception('Phrase could not be inserted into DB because the source language (code: ' . $srcCode . ') could not be loaded.');
-                }
-
-                // insert the new phrase into the DB
-                $phrase = new Phrase();
-                $phrase->language_id = $languageSrc->id;
-                $phrase->hash = $srcHash;
-                $phrase->value = $srcPhrase;
-                $phrase->save();
-                LogController::log('notice', 1, 'New Phrase saved in DB as ID - ' . $phrase->id);
             } else {
-                LogController::log('notice', 1, 'Phrase located under ID - ' . $phrase->id);
+                LogController::log('notice', 3, 'Use Database is disabled. Skipping Phrase check and insertion...');
             }
 
-            // (3.2) ...ok, the phrase is in the DB. Let's get the correct Translation and insert it into the DB against the phrase
+            // ------------------------------------------------------------
+            // (4) We need to call the Cloud API to get the translation
             LogController::log('notice', 1, 'Call API for Translation.');
 
             $defaultProvider = config('dom_translate.api.provider');
@@ -139,33 +163,44 @@ class TranslateController extends BaseController
             LogController::log('notice', 2, 'Provider Controller - ' . $providerController);
 
             // bind the Provider Translation Controller with the `Cloud Translate Interface`
-            App::bind(Wazza\DomTranslate\Contracts\CloudTranslateInterface::class, $providerController);
+            App::bind(CloudTranslateInterface::class, $providerController);
             LogController::log('notice', 3, 'Provider Controller ' . $providerController . ' binded to the CloudTranslateInterface Class.');
 
             // initiate the cloud translate request on the binded provider class
-            $translatedString = App::make(Wazza\DomTranslate\Contracts\CloudTranslateInterface::class)->cloudTranslate($srcPhrase, $destCode, $srcCode);
+            $translatedString = App::make(CloudTranslateInterface::class)->cloudTranslate($srcPhrase, $destCode, $srcCode);
 
-            // (4) insert translated text into db
-            // (4.1) find the destination language id
-            $languageDest = Language::select('id')->where('code', $destCode)->first();
-            if (is_null($languageDest)) {
-                throw new Exception('Translation could not be inserted into DB because the destincation language could not be loaded.');
+            // ------------------------------------------------------------
+            // (5) insert translated text into db (if enabled in config)
+            if (!is_null($phrase) && config('dom_translate.use_database', true) === true) {
+                LogController::log('notice', 3, 'Use Database is enabled. Inserting translation into DB...');
+
+                // (5.1) find the destination language id
+                $languageDest = Language::select('id')->where('code', $destCode)->first();
+                if (is_null($languageDest)) {
+                    throw new Exception('Translation could not be inserted into DB because the destincation language could not be loaded.');
+                }
+                LogController::log('notice', 1, 'Destination Language (code: ' . $languageDest->id . ') located at ID - ' . $languageDest->id);
+
+                // (5.2) insert new translation into db
+                $translation = new Translation();
+                $translation->language_id = $languageDest->id;
+                $translation->phrase_id = $phrase->id;
+                $translation->value = $translatedString;
+                $translation->save();
+                LogController::log('notice', 1, 'New Translation inserted into DB at ID - ' . $translation->id);
+            } else {
+                LogController::log('notice', 3, 'Use Database is disabled (or source phrase object is null). Skipping DB insertion...');
             }
-            LogController::log('notice', 1, 'Destination Language (code: ' . $languageDest->id . ') located at ID - ' . $languageDest->id);
 
-            // (4.2) insert new tranlation into db
-            $translation = new Translation();
-            $translation->language_id = $languageDest->id;
-            $translation->phrase_id = $phrase->id;
-            $translation->value = $translatedString;
-            $translation->save();
-            LogController::log('notice', 1, 'New Translation inserted into DB at ID - ' . $translation->id);
-
-            // save to session so that future request (for this session) can be returned at step 1 above
+            // (6) save to session so that future request (for this session) can be returned at step 1 above
             if (config('dom_translate.use_session', false) === true) {
+                LogController::log('notice', 3, 'Use Session is enabled. Inserting translation into Session...');
                 session()->put($srcHash . $srcCode . $destCode, $translatedString);
+            } else {
+                LogController::log('notice', 3, 'Use Session is disabled. Skipping Session insertion...');
             }
 
+            // ------------------------------------------------------------
             // return the newly translated text
             return $translatedString;
         } catch (Exception $e) {
