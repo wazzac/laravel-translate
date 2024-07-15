@@ -4,26 +4,28 @@
     <a href="https://github.com/WarrenGIT/domTranslate/blob/main/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/WarrenGIT/domTranslate"></a>
 </p>
 
-# domTranslate
+# Laravel Translate Package
 
-A library that will use the built-in Laravel Derictive and provide automated translations to all your blade phrases or words.
+A library that leverages Laravel Directives to provide automated translations for all your Blade phrases or words.
 
-_Example: Write HTML static data in English and display it in a different language on run time (...in real-time)._
+_Example: Write HTML static data in English and display it in a different language in real-time._
 
 ## Overview
 
-The library contains 3 database tables (_domt_phrases_, _domt_translations_ and _domt_languages_) that are used to retrieve translations using an indexed hash.
+The library uses three database tables (_domt_phrases_, _domt_translations_, and _domt_languages_) to manage translations efficiently.
 
-1. On page load, the system will search for a specific translation using the provided phrase (in the `@transl8()` directive) in the _domt_translations_ table.
-2. If the translation was found, it will be returned and displayed on the page _(no API call was made)_.
-3. If no transalation were found _(not previously translated)_, call the Google Translate API endpoint _(or any other Provider)_ to retrieve the correct translation.
-4. Insert the newly translated text into the DB so that we don't have to call the API again for the given phrase _(step 1 above)_.
+1.  On page load, the system searches for a specific translation using the provided phrase in the `@transl8()` directive from the _domt_translations_ table.
+2.  If the translation is found, it is returned and displayed on the page without making an API call.
+3.  If the translation is not found _(not translated yet)_, the Google Translate API (or another defined provider) is called to retrieve the new translation.
+4.  The newly translated text is then inserted into the database to avoid future API calls for the same phrase.
+
+> Note: To ensure quick retrieval of translations, each phrase is hashed and stored in an indexed table column. All searches are performed against this indexed column for optimal performance.
 
 ## Installation
 
-> PHP 8.0 is a minimum requirement for this project.
+> PHP 8.0 is the minimum requirement for this project.
 
-1. Follow the below steps to install the package
+Follow these steps to install the package:
 
 ```bash
 composer require wazza/dom-translate
@@ -32,16 +34,17 @@ php artisan vendor:publish --tag="dom-translate-migrations"
 php artisan migrate
 ```
 
-2. Add `DOM_TRANSLATE_GOOGLE_KEY={key value from Google}` to your _.env_ file and run...
+Add `DOM_TRANSLATE_GOOGLE_KEY={your_google_api_key}` to your `.env` file and run:
 
 ```bash
 php artisan config:cache
 ```
 
-The example below of all the supported env keys that can be added with their current default values if not given. The `KEY` (i.e. `DOM_TRANSLATE_GOOGLE_KEY`) items are required.
+Below are all the supported `.env` keys with their default values if not provided. The `KEY` (i.e., `DOM_TRANSLATE_GOOGLE_KEY`) is required.
 
 ```
 DOM_TRANSLATE_USE_SESSION=true
+DOM_TRANSLATE_USE_DATABASE=true
 DOM_TRANSLATE_LOG_LEVEL=3
 DOM_TRANSLATE_LOG_INDICATOR=dom-translate
 DOM_TRANSLATE_PROVIDER=google
@@ -53,101 +56,100 @@ DOM_TRANSLATE_LANG_SRC=en
 DOM_TRANSLATE_LANG_DEST=af
 ```
 
-> **Note:** If you don't have a [Google Cloud Platform](https://cloud.google.com/gcp) account yet, click on the link and sign up. Create a new Project and add the _Cloud Translation API_ to it. You can use [Insomnia](https://insomnia.rest/download) (image below) to test your API key.
+-   If DOM_TRANSLATE_USE_SESSION is set to true, translations will be saved in the session and used as the first point of retrieval.
+-   If no translations are found in the session, or if DOM_TRANSLATE_USE_SESSION is set to false, translations will be retrieved from the database, provided they have been previously stored there.
+-   If translations are still not found, or if both DOM_TRANSLATE_USE_SESSION and DOM_TRANSLATE_USE_DATABASE are set to false, translations will be sourced from a third-party translation service (e.g., Google Translate).
+-   Depending on whether DOM_TRANSLATE_USE_SESSION and DOM_TRANSLATE_USE_DATABASE are set to true, the retrieved translation will be saved to either the session or the database.
 
-<a href="https://ibb.co/R0dwJ78" target="_blank">
-    <img src="https://i.ibb.co/wWjm2Yt/insomnia.png" alt="insomnia" border="0" width="100%" />
-</a>
+> **Note:** If you don't have a [Google Cloud Platform](https://cloud.google.com/gcp) account, sign up and create a new project. Add the _Cloud Translation API_ to it. You can use [Insomnia](https://insomnia.rest/download) to test your API key.
 
-3. Done. Review any configuration file changes that you might want to change. The config file was published to the main config folder.
+<a href="https://ibb.co/R0dwJ78" target="_blank"> <img src="https://i.ibb.co/wWjm2Yt/insomnia.png" alt="insomnia" border="0" width="100%" /> </a>
 
-> All done: Start your service again and update your Blade files with the @transl8 directive. Only new un-translated phrases will be translated via the API call. Any future requests, for the same phrase, will be retrieved from the database.
+Review any configuration file changes that you might want to make. The config file is published to the main config folder.
+
+> You're all set! 😉
+
+Restart your service and update your Blade files with the `@transl8` directive. Only new untranslated phrases will trigger an API call. Future requests for the same phrase will be retrieved from the database.
 
 ## HTML Blade Example
 
-Find below a few examples of how to use the translate Blade directive in your HTML (Blade) files.
+Here are a few examples of how to use the translate Blade directive in your HTML (Blade) files:
 
 ```blade
 <div>
-    {{-- Fully dependant on the source and destination language settings, only provide a phrase (this is the default way) --}}
+    {{-- Default usage: Only provide a phrase --}}
     <p>@transl8("I like this feature.")</p>
 
-    {{-- Overwrite the default (1) Destination language by including a second (destination) argument --}}
-    <p>@transl8("We need to test it in the staging environment.","de")</p>
+    {{-- Specify a destination language --}}
+    <p>@transl8("We need to test it in the staging environment.", "de")</p>
 
-    {{-- Overwrite the default (1) Source and (2) Destination languages by including a second (destination) and third (source) argument --}}
-    <p>@transl8("Wie weet waar Willem Wouter woon?","en","af")</p>
+    {{-- Specify both source and destination languages --}}
+    <p>@transl8("Wie weet waar Willem Wouter woon?", "en", "af")</p>
 
-    {{-- Use a Blade Language Specific directive for each language --}}
+    {{-- Language-specific directives --}}
     <p>@transl8fr("This phrase will be translated to French.")</p>
     <p>@transl8de("This phrase will be translated to German.")</p>
     <p>@transl8je("This phrase will be translated to Japanese.")</p>
 
-    {{-- ...you can update the Laravel AppServiceProvider register() method and add more of your own directives but ultimately the default @transl8() should be sufficient --}}
-
-    {{-- ...and lastly, a phrase that will not be translated --}}
+    {{-- A phrase that will not be translated --}}
     <p>This phrase will not be translated.</p>
 </div>
 ```
 
-## Blade Directive Example:
+## Blade Directive Example
 
-The below 4 directives are available by default (`@transl8()` is the **main one**).
-
-You are welcome to add more directly in your Laravel _AppServiceProvider_ file _(under the register() method)_
+Four directives are available by default (`@transl8()` is the main one). You can add more in your Laravel _AppServiceProvider_ file (under the `register()` method).
 
 ```php
-// (1) Register the DEFAULT Blade Directives - @transl8()
-// With `transl8`, only the first argument is required (phrase).
-// If you do not supply the destination or source languages, the default values will be sourced from the Config file.
-// -- Format: transl8('Phrase','target','source')
-// -- Example: transl8('This must be translated to French.','fr')
+// Register the default Blade directive - @transl8()
+// Only the phrase argument is required. Default source and destination languages are sourced from the config file.
+// - Format: transl8('Phrase','target','source')
+// - Example: transl8('This must be translated to French.','fr')
 Blade::directive('transl8', function ($string) {
     return \Wazza\DomTranslate\Controllers\TranslateController::phrase($string);
 });
 
-// (2) Register DIRECT (language specific) Blade directives, all from English (source)
-// (2.1) French - @transl8fr('phrase')
+// Register language-specific Blade directives
+// French - @transl8fr('phrase')
 Blade::directive('transl8fr', function ($string) {
     return \Wazza\DomTranslate\Controllers\TranslateController::translate($string, "fr", "en");
 });
-// (2.2) German - @transl8de('phrase')
+// German - @transl8de('phrase')
 Blade::directive('transl8de', function ($string) {
     return \Wazza\DomTranslate\Controllers\TranslateController::translate($string, "de", "en");
 });
-// (2.3) Japanese - @transl8je('phrase')
+// Japanese - @transl8je('phrase')
 Blade::directive('transl8je', function ($string) {
     return \Wazza\DomTranslate\Controllers\TranslateController::translate($string, "je", "en");
 });
-// (2.4) etc. You can create your own in Laravel's AppServiceProvider register() method, but ultimately the default @transl8() should be sufficient.
 ```
 
-## Outstanding Development (Backlog)
+## Future Development (Backlog)
 
--   Create an alternative Translation Engine/s. Google Translate is currently the only supported option via `Wazza\DomTranslate\Controllers\ApiTranslate\GoogleTranslate()`. Other possible options that can be added: 'NLP Translation', 'Microsoft Translator', etc. (Important: Add the Translation path to the config file - see below)
+-   Translations are not always perfect. Create a Phrase vs Translation admin section that will allow a user to change (update) a translated phase with corrections.
+-   Create alternative translation engines. Currently, only Google Translate is supported via `Wazza\DomTranslate\Controllers\ApiTranslate\GoogleTranslate()`. Other options to consider include NLP Translation, Microsoft Translator, etc.
 
 ```php
-    // line 14 in 'wazza\dom-translate\config\dom_translate.php'
-    // 3rd party translation service providers.
-    'api' => [
-        'provider' => env('DOM_TRANSLATE_PROVIDER', 'google'),
-        'google' => [
-            'controller' => "Wazza\DomTranslate\Controllers\ApiTranslate\GoogleTranslate",
-            'endpoint' => "https://www.googleapis.com/language/translate/v2",
-            'action' => "POST",
-            'key' => env('DOM_TRANSLATE_GOOGLE_KEY', null), // https://console.cloud.google.com/apis/credentials
-        ],
-        // @todo - for developers wanting to contribute:
-        // fork the project and add more translate providers here... (and their \ApiTranslate\Class implementing CloudTranslateInterface)
-        // ... thanks ;)
+// Line 14 in 'wazza\dom-translate\config\dom_translate.php'
+// Third-party translation service providers
+'api' => [
+    'provider' => env('DOM_TRANSLATE_PROVIDER', 'google'),
+    'google' => [
+        'controller' => "Wazza\DomTranslate\Controllers\ApiTranslate\GoogleTranslate",
+        'endpoint' => "https://www.googleapis.com/language/translate/v2",
+        'action' => "POST",
+        'key' => env('DOM_TRANSLATE_GOOGLE_KEY', null), // https://console.cloud.google.com/apis/credentials
     ],
+    // To contribute, fork the project and add more translation providers here, implementing CloudTranslateInterface
+],
 ```
 
-## Run local tests
+## Running Local Tests
 
-```
+Run the following command to execute tests:
+
+```bash
 .\vendor\bin\phpunit
 ```
 
-**Important:** For the final 2 assert Tests to work, you would have to add your own personal [Google Translate key](https://console.cloud.google.com/apis/credentials)
-as DOM_TRANSLATE_GOOGLE_KEY=xxx in .env (at the time of writing there were free options available)
+**Important:** For the final two assert tests to work, add your personal [Google Translate key](https://console.cloud.google.com/apis/credentials) as `DOM_TRANSLATE_GOOGLE_KEY=xxx` in your `.env` file (free options are available at the time of writing).
