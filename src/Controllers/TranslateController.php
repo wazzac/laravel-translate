@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\App;
 use Wazza\DomTranslate\Phrase;
 use Wazza\DomTranslate\Language;
 use Wazza\DomTranslate\Translation;
-use Wazza\DomTranslate\Helpers\phraseHelper;
+use Wazza\DomTranslate\Helpers\PhraseHelper;
 use Wazza\DomTranslate\Contracts\CloudTranslateInterface;
 use Exception;
 
@@ -24,11 +24,11 @@ class TranslateController extends BaseController
     public static function phrase(?string $string = null)
     {
         // split the string (not using explode)
-        $arguments = phraseHelper::splitTranslateArgs($string);
+        $arguments = PhraseHelper::splitTranslateArgs($string);
 
         // sanitise the items
         foreach ($arguments as $key => $argument) {
-            $arguments[$key] = phraseHelper::sanitise($argument);
+            $arguments[$key] = PhraseHelper::sanitise($argument);
         }
 
         // call the translation method
@@ -52,19 +52,19 @@ class TranslateController extends BaseController
         LogController::log('notice', 1, 'New phrase to translate.'); // high-level = 1
 
         // sanitise the phrase
-        $srcPhrase = phraseHelper::sanitise($srcPhrase);
+        $srcPhrase = PhraseHelper::sanitise($srcPhrase);
         LogController::log('notice', 3, 'Phrase Sanitised ............... : ' . $srcPhrase); // low-level = 3
 
         // hash the phrase
-        $srcHash = phraseHelper::hash($srcPhrase);
+        $srcHash = PhraseHelper::hash($srcPhrase);
         LogController::log('notice', 3, 'Phrase Hashed .................. : ' . $srcHash);
 
         // do we have a destination language defined
-        $destCode = phraseHelper::prepDestLanguage($destCode);
+        $destCode = PhraseHelper::prepDestLanguage($destCode);
         LogController::log('notice', 2, 'Destination language code set as : ' . $destCode);
 
         // do we have a source language defined
-        $srcCode = phraseHelper::prepSrcLanguage($srcCode);
+        $srcCode = PhraseHelper::prepSrcLanguage($srcCode);
         LogController::log('notice', 2, 'Source language code set as .... : ' . $srcCode);
 
         // ok, ready to rock-and-roll...

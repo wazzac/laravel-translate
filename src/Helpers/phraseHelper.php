@@ -2,7 +2,7 @@
 
 namespace Wazza\DomTranslate\Helpers;
 
-class phraseHelper
+class PhraseHelper
 {
     /**
      * Sanitise a given Phrase, removing any single of double quotes.
