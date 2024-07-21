@@ -1,4 +1,8 @@
 # Release Notes
+## v2.2.1 `2024-07-21`
+### Updated
+- Renamed the `PhraseHelper.php` class to conform to PSR-1.
+
 ## v2.2.0 `2024-07-15`
 ### Added
 - Added `DOM_TRANSLATE_USE_DATABASE` to the config file. This will allow you enable or disable the db phrase and translation storage.
