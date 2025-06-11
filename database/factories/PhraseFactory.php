@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories;
+namespace Wazza\DomTranslate\Database\Factories;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;

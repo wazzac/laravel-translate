@@ -46,9 +46,13 @@ class DomTranslateServiceProvider extends BaseServiceProvider
         );
 
         // Register the service the package provides.
+        // As all the methods are static, we can use the controller directly.
+        // Singleton registration will be considered later.
+        /*
         $this->app->singleton(TranslateController::class, function () {
             return new TranslateController();
         });
+        */
 
         // (1) Register the default Blade directives
         // With `transl8` you can supply any destination language. If none is supplied, the default in Config would be used.

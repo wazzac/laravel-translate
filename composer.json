@@ -2,6 +2,16 @@
     "name": "wazza/dom-translate",
     "description": "A Laravel Package that will use the build-in Blade Directive to define specific phrases for auto-translation before being rendered to the screen.",
     "type": "library",
+    "keywords": [
+        "laravel",
+        "translation",
+        "blade-translate",
+        "blase",
+        "package"
+    ],
+    "homepage": "https://www.wazzac.dev",
+    "repository": "https://github.com/wazzac/laravel-translate",
+    "readme": "README.md",
     "require": {
         "php": "^8.1",
         "ext-json": "*",
@@ -26,8 +36,8 @@
         "psr-4": {
             "Wazza\\DomTranslate\\": "src/",
             "Wazza\\DomTranslate\\Tests\\": "tests/",
-            "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "Wazza\\DomTranslate\\Database\\Factories\\": "database/factories/",
+            "Wazza\\DomTranslate\\Database\\Seeders\\": "database/seeders/"
         }
     },
     "extra": {
@@ -40,11 +50,17 @@
             }
         }
     },
-    "authors": [{
-        "name": "Warren Coetzee",
-        "email": "warren.coetzee@gmail.com",
-        "homepage": "https://www.wazzac.dev"
-    }],
+    "authors": [
+        {
+            "name": "Warren Coetzee",
+            "email": "warren.coetzee@gmail.com",
+            "homepage": "https://www.wazzac.dev"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/wazzacdev/laravel-translate/issues",
+        "source": "https://github.com/wazzacdev/laravel-translate"
+    },
     "scripts": {
         "post-autoload-dump": [
             "@php ./vendor/bin/testbench package:discover --ansi"

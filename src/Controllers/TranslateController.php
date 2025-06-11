@@ -16,7 +16,7 @@ class TranslateController extends BaseController
 {
     /**
      * Function that will receive a single string containing the phrase to be translated as well as the destination and source languages
-     * This would most lickely be used from the Blade custom directive.
+     * This would most likely be used from the Blade custom directive.
      *
      * @param string|null $string String containing - "phrase to translate","fr","en" (or single quotes)
      * @return void
