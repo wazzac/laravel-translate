@@ -37,9 +37,22 @@ php artisan vendor:publish --tag="dom-translate-migrations"
 php artisan migrate
 ```
 
+Register the Service Provider (if not auto-discovered):
+Add to `bootstrap/providers.php`:
+
+```php
+return [
+        App\Providers\AppServiceProvider::class,
+        Wazza\DomTranslate\Providers\DomTranslateServiceProvider::class,
+];
+```
+
+> _If your package supports Laravel auto-discovery, this step may be optional._
+
 Add `DOM_TRANSLATE_GOOGLE_KEY={your_google_api_key}` to your `.env` file and run:
 
 ```bash
+php artisan config:clear
 php artisan config:cache
 ```
 

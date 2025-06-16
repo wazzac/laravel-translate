@@ -10,7 +10,7 @@ class PhraseHelper
      * @param string $string
      * @return string
      */
-    public static function sanitise($string)
+    public static function sanitise($string): string
     {
         return trim($string, '\'"');
     }
@@ -34,7 +34,7 @@ class PhraseHelper
      * @param string $string
      * @return string
      */
-    public static function hash(string $string)
+    public static function hash(string $string): string
     {
         return hash_hmac(
             config('dom_translate.hash.algo'),
@@ -49,7 +49,7 @@ class PhraseHelper
      * @param string $destCode
      * @return string
      */
-    public static function prepDestLanguage(?string $destCode = null)
+    public static function prepDestLanguage(?string $destCode = null): string
     {
         return trim(strtolower(!empty($destCode) ? $destCode : config('dom_translate.language.dest')));
     }
@@ -60,7 +60,7 @@ class PhraseHelper
      * @param string $srcCode
      * @return string
      */
-    public static function prepSrcLanguage(?string $srcCode = null)
+    public static function prepSrcLanguage(?string $srcCode = null): string
     {
         return trim(strtolower(!empty($srcCode) ? $srcCode : config('dom_translate.language.src')));
     }

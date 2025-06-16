@@ -19,9 +19,9 @@ class TranslateController extends BaseController
      * This would most likely be used from the Blade custom directive.
      *
      * @param string|null $string String containing - "phrase to translate","fr","en" (or single quotes)
-     * @return void
+     * @return string
      */
-    public static function phrase(?string $string = null)
+    public function phrase(?string $string = null): string
     {
         // split the string (not using explode)
         $arguments = PhraseHelper::splitTranslateArgs($string);
@@ -32,7 +32,7 @@ class TranslateController extends BaseController
         }
 
         // call the translation method
-        return self::translate($arguments[0] ?? null, $arguments[1] ?? null, $arguments[2] ?? null);
+        return $this->translate($arguments[0] ?? null, $arguments[1] ?? null, $arguments[2] ?? null);
     }
 
 
@@ -43,10 +43,10 @@ class TranslateController extends BaseController
      * @param string|null $srcPhrase The phrase to be translated
      * @param string|null $destCode The destination language code - i.e. fr (defaults would be retrieved from the config file)
      * @param string|null $srcCode The source language code - i.e. en (defaults would be retrieved from the config file)
-     * @return void
+     * @return string
      * @throws Exception
      */
-    public static function translate(?string $srcPhrase = null, ?string $destCode = null, ?string $srcCode = null)
+    public function translate(?string $srcPhrase = null, ?string $destCode = null, ?string $srcCode = null): string
     {
         LogController::log('notice', 1, '----- Translation request start -----');
         LogController::log('notice', 1, 'New phrase to translate.'); // high-level = 1
@@ -169,7 +169,11 @@ class TranslateController extends BaseController
             LogController::log('notice', 3, 'Provider Controller ' . $providerController . ' binded to the CloudTranslateInterface Class.');
 
             // initiate the cloud translate request on the binded provider class
-            $translatedString = App::make(CloudTranslateInterface::class)->cloudTranslate($srcPhrase, $destCode, $srcCode);
+            $translatedString = App::make(CloudTranslateInterface::class)->cloudTranslate(
+                $srcPhrase,
+                $destCode,
+                $srcCode
+            );
 
             // ------------------------------------------------------------
             // (5) insert translated text into db (if enabled in config)
