@@ -35,7 +35,6 @@ class TranslateController extends BaseController
         return $this->translate($arguments[0] ?? null, $arguments[1] ?? null, $arguments[2] ?? null);
     }
 
-
     /**
      * Primary translation method
      *
