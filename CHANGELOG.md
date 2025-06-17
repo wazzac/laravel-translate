@@ -1,4 +1,13 @@
 # Release Notes
+
+## v2.3.0 `2025-06-17`
+
+### Changed
+- Refactored `TranslateController` to use instance (non-static) methods and registered it as a singleton in the service provider.
+- Updated all Blade directives in `DomTranslateServiceProvider` to use the singleton instance via `app(TranslateController::class)`.
+- Improved Blade directive registration for proper PHP syntax and singleton usage.
+
+
 ## v2.2.1 `2024-07-21`
 ### Updated
 - Renamed the `PhraseHelper.php` class to conform to PSR-1.

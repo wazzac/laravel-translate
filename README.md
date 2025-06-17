@@ -37,9 +37,22 @@ php artisan vendor:publish --tag="dom-translate-migrations"
 php artisan migrate
 ```
 
+Register the Service Provider (if not auto-discovered):
+Add to `bootstrap/providers.php`:
+
+```php
+return [
+        App\Providers\AppServiceProvider::class,
+        Wazza\DomTranslate\Providers\DomTranslateServiceProvider::class,
+];
+```
+
+> _If your package supports Laravel auto-discovery, this step may be optional._
+
 Add `DOM_TRANSLATE_GOOGLE_KEY={your_google_api_key}` to your `.env` file and run:
 
 ```bash
+php artisan config:clear
 php artisan config:cache
 ```
 
@@ -105,27 +118,39 @@ Here are a few examples of how to use the translate Blade directive in your HTML
 Four directives are available by default (`@transl8()` is the main one). You can add more in your Laravel _AppServiceProvider_ file (under the `register()` method).
 
 ```php
-// Register the default Blade directive - @transl8()
-// Only the phrase argument is required. Default source and destination languages are sourced from the config file.
-// - Format: transl8('Phrase','target','source')
-// - Example: transl8('This must be translated to French.','fr')
-Blade::directive('transl8', function ($string) {
-    return \Wazza\DomTranslate\Controllers\TranslateController::phrase($string);
-});
+    // Register the default Blade directive - @transl8()
+    // Only the phrase argument is required. Default source and destination languages are sourced from the config file.
+    // - Format: transl8('Phrase','target','source')
+    // - Example: transl8('This must be translated to French.','fr')
+    // Register the @transl8 directive separately
+    Blade::directive('transl8', function ($string) {
+        return "<?= app(" . TranslateController::class . "::class)->phrase({$string}); ?>";
+    });
 
-// Register language-specific Blade directives
-// French - @transl8fr('phrase')
-Blade::directive('transl8fr', function ($string) {
-    return \Wazza\DomTranslate\Controllers\TranslateController::translate($string, "fr", "en");
-});
-// German - @transl8de('phrase')
-Blade::directive('transl8de', function ($string) {
-    return \Wazza\DomTranslate\Controllers\TranslateController::translate($string, "de", "en");
-});
-// Japanese - @transl8je('phrase')
-Blade::directive('transl8je', function ($string) {
-    return \Wazza\DomTranslate\Controllers\TranslateController::translate($string, "je", "en");
-});
+    // Register the @transl8 directive for specific languages you use often
+    $languages = [
+        'fr', // French
+        'de', // German
+        'nl', // Dutch
+        'es', // Spanish
+        'it', // Italian
+        'pt', // Portuguese
+        'ru', // Russian
+        'zhcn' => 'zh-CN', // Chinese Simplified
+        'zhtw' => 'zh-TW', // Chinese Traditional
+        'af', // Afrikaans
+        'ar' => 'ar-SA', // Arabic
+        // ... Add more languages as needed
+    ];
+
+    // Register directives for each language by iterating over the languages array
+    foreach ($languages as $alias => $langCode) {
+        // Handle array values like 'zhcn' => 'zh-CN'
+        $directive = is_string($alias) ? $alias : $langCode;
+        Blade::directive("transl8{$directive}", function ($string) use ($langCode) {
+            return "<?= app(" . TranslateController::class . "::class)->translate({$string}, '{$langCode}', 'en'); ?>";
+        });
+    }
 ```
 
 ## Future Development (Backlog)

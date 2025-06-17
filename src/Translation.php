@@ -4,7 +4,7 @@ namespace Wazza\DomTranslate;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Database\Factories\TranslationFactory;
+use Wazza\DomTranslate\Database\Factories\TranslationFactory;
 use Wazza\DomTranslate\Phrase;
 use Wazza\DomTranslate\Language;
 

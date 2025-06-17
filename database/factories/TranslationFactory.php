@@ -1,10 +1,9 @@
 <?php
 
-namespace Database\Factories;
+namespace Wazza\DomTranslate\Database\Factories;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Wazza\DomTranslate\Language;
 use Wazza\DomTranslate\Phrase;
 use Wazza\DomTranslate\Translation;
 
