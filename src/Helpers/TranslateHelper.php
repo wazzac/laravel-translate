@@ -4,6 +4,7 @@ namespace Wazza\DomTranslate\Helpers;
 
 use Wazza\DomTranslate\Controllers\TranslateController;
 use Wazza\DomTranslate\Controllers\LogController;
+use Illuminate\Http\Request;
 
 class TranslateHelper
 {
@@ -14,10 +15,10 @@ class TranslateHelper
      *
      * @return string
      */
-    public static function currentDefinedLanguageCode(): string
+    public static function currentDefinedLanguageCode(string $sessionAndCookieName = 'app_language_code'): string
     {
-        return session('app_language_code') // preferred language set in session (user select a language from a dropdown and we set it in a long session)
-            ?? request()->cookie('app_language_code') // check for a cookie set by the app (..or, we set the selected language in a cookie)
+        return session($sessionAndCookieName) // preferred language set in session (user select a language from a dropdown and we set it in a long session)
+            ?? request()->cookie($sessionAndCookieName) // check for a cookie set by the app (..or, we set the selected language in a cookie)
             ?? config('dom_translate.language.dest') // our default destination language defined in the translation config
             ?? config('app.locale', self::DEFAULT_SYSTEM_LANGUAGE) // absolute fallback to the app's locale if nothing else is set
             ?? self::DEFAULT_SYSTEM_LANGUAGE; // if all else fails, default to English
@@ -30,10 +31,13 @@ class TranslateHelper
      * @param string|null $targetLanguage
      * @return string
      */
-    public static function autoTransl8(string $text, ?string $targetLanguage = null): string
-    {
+    public static function autoTransl8(
+        string $text,
+        ?string $targetLanguage = null,
+        string $sessionAndCookieName = 'app_language_code'
+    ): string {
         // use the current language if no target specified
-        $language = $targetLanguage ?? self::currentDefinedLanguageCode();
+        $language = $targetLanguage ?? self::currentDefinedLanguageCode($sessionAndCookieName);
 
         // if it's English or no translation needed, return original
         if ($language === self::DEFAULT_SYSTEM_LANGUAGE) {
@@ -61,5 +65,29 @@ class TranslateHelper
             // return the original text if translation fails
             return $text;
         }
+    }
+
+    /**
+     * Set the user's preferred language and return a json response with a cookie
+     *
+     * @param string $langCode
+     * @param string $sessionAndCookieName
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public static function setLanguage(
+        string $langCode = 'en',
+        string $sessionAndCookieName = 'app_language_code'
+    ) {
+        // store in session
+        session([$sessionAndCookieName => $langCode]);
+
+        // also set a cookie for 1 year as backup (with proper path and domain)
+        return cookie($sessionAndCookieName, $langCode, 60 * 24 * 365, '/', null, false, false);
+
+        // return a JSON response with the new language preference
+        return response()->json([
+            'message' => 'Language preference set successfully.',
+            'language' => $langCode
+        ])->cookie($cookie);
     }
 }
