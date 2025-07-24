@@ -4,6 +4,7 @@ namespace Wazza\DomTranslate\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Illuminate\Support\Facades\Blade;
+use Wazza\DomTranslate\Helpers\TranslateHelper;
 use Wazza\DomTranslate\Controllers\TranslateController;
 
 class DomTranslateServiceProvider extends BaseServiceProvider
@@ -50,11 +51,22 @@ class DomTranslateServiceProvider extends BaseServiceProvider
             return new TranslateController();
         });
 
-        // Register the @transl8 directive separately
+        // ---------------
+        // Register the @transl8 directive for specific translation according to the config setup
         Blade::directive('transl8', function ($string) {
             return "<?= app(" . TranslateController::class . "::class)->phrase({$string}); ?>";
         });
 
+        // ---------------
+        // Register an auto translation directive that will use a session or cookie to determine the destination language
+        Blade::directive('transl8auto', function ($string) {
+            return TranslateHelper::autoTransl8(
+                $string, // what we want to translate
+                TranslateHelper::currentDefinedLanguageCode() // this will use the current user's language preference (saved in session or cookie)
+            );
+        });
+
+        // ---------------
         // Register the @transl8 directive for specific languages you use often
         $languages = [
             'fr', // French

@@ -2,9 +2,9 @@
 
 namespace Wazza\DomTranslate\Controllers;
 
+use Illuminate\Support\Facades\App;
 use Wazza\DomTranslate\Controllers\BaseController;
 use Wazza\DomTranslate\Controllers\LogController;
-use Illuminate\Support\Facades\App;
 use Wazza\DomTranslate\Phrase;
 use Wazza\DomTranslate\Language;
 use Wazza\DomTranslate\Translation;
