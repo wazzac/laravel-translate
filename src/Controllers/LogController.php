@@ -15,7 +15,7 @@ final class LogController
      * @param array $context The log Context
      * @return void
      */
-    public static function log(string $type, int $level = 1, string $string = "", array $context = [])
+    public static function log(string $type, int $level = 1, string $string = "", array $context = []): void
     {
         // load the config
         $logConf = config('dom_translate.logging');
@@ -23,8 +23,17 @@ final class LogController
         // make sure we can log
         if (isset($logConf['level']) && !empty($logConf['level']) && $level <= $logConf['level'] && $level > 0) {
             // make sure the method is allowed
-            if (in_array($type, ['alert', 'critical', 'debug', 'emergency', 'error', 'info', 'notice', 'warning'])) {
-                // log...
+            if (in_array($type, [
+                'alert',
+                'critical',
+                'debug',
+                'emergency',
+                'error',
+                'info',
+                'notice',
+                'warning'
+            ])) {
+                // log using using the Laravel Log facade
                 Log::$type('[' . $logConf['indicator'] . '] ' . $string, $context);
             }
         }

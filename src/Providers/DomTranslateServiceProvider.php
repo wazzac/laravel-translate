@@ -4,6 +4,7 @@ namespace Wazza\DomTranslate\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Illuminate\Support\Facades\Blade;
+use Wazza\DomTranslate\Helpers\TranslateHelper;
 use Wazza\DomTranslate\Controllers\TranslateController;
 
 class DomTranslateServiceProvider extends BaseServiceProvider
@@ -29,10 +30,26 @@ class DomTranslateServiceProvider extends BaseServiceProvider
 
         // Load the migrations
         $this->loadMigrationsFrom($this->dbMigrationsPath());
+
+        // Load routes if enabled in config
+        if (config('dom_translate.routes.enabled', true)) {
+            $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
+        }
+
+        // Register the SetLocale middleware if enabled in config
+        if (config('dom_translate.middleware.auto_locale', true)) {
+            $router = $this->app['router'];
+            $router->aliasMiddleware('dom-translate.locale', \Wazza\DomTranslate\Http\Middleware\SetLocaleMiddleware::class);
+
+            // Auto-apply to web middleware group if configured
+            if (config('dom_translate.middleware.auto_apply', true)) {
+                $router->pushMiddlewareToGroup('web', \Wazza\DomTranslate\Http\Middleware\SetLocaleMiddleware::class);
+            }
+        }
     }
 
     /**
-     * Make config publishment optional by merging the config from the package.
+     * Make config publication optional by merging the config from the package.
      * Name of the config file - config('dom_translate')
      *
      * @return  void
@@ -50,11 +67,19 @@ class DomTranslateServiceProvider extends BaseServiceProvider
             return new TranslateController();
         });
 
-        // Register the @transl8 directive separately
+        // ---------------
+        // Register the @transl8 directive for specific translation according to the config setup
         Blade::directive('transl8', function ($string) {
             return "<?= app(" . TranslateController::class . "::class)->phrase({$string}); ?>";
         });
 
+        // ---------------
+        // Register an auto translation directive that will use a session or cookie to determine the destination language
+        Blade::directive('transl8auto', function ($string) {
+            return "<?= \\Wazza\\DomTranslate\\Helpers\\TranslateHelper::autoTransl8({$string}, \\Wazza\\DomTranslate\\Helpers\\TranslateHelper::currentDefinedLanguageCode()); ?>";
+        });
+
+        // ---------------
         // Register the @transl8 directive for specific languages you use often
         $languages = [
             'fr', // French

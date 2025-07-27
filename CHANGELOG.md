@@ -1,5 +1,25 @@
 # Release Notes
 
+## v2.4.0 `2025-07-27`
+
+### Added
+- **Auto-Translation API Routes:** Added automatic HTTP endpoints (`/set-language/{code}` and `/get-language`) for seamless language management via AJAX/JavaScript
+- **SetLocaleMiddleware:** New middleware that automatically synchronizes Laravel's application locale with the translation system and Carbon date localization
+- **Automatic View Cache Clearing:** Language changes now automatically clear Laravel's view cache to ensure immediate translation updates
+- **Enhanced TranslateHelper:** Added `currentDefinedLanguageCode()` method and improved `setLanguage()` with automatic cache clearing
+- **LanguageController:** New dedicated controller for handling language preference API endpoints with proper validation and JSON responses
+- **Comprehensive Documentation:** Extensively enhanced README.md with step-by-step Google Cloud Translation API setup, JavaScript examples, Vue.js components, troubleshooting guides, and best practices
+
+### Changed
+- **Unified Language Experience:** The package now provides seamless integration between custom translations and Laravel's built-in localization system
+- **Improved Performance:** Automatic cache management ensures optimal performance without manual intervention
+- **Enhanced Developer Experience:** Complete documentation with real-world examples, troubleshooting guides, and implementation patterns
+
+### Fixed
+- **View Cache Persistence:** Resolved issues where translated content would persist in view cache after language changes
+- **Locale Synchronization:** Fixed discrepancies between custom translation system and Laravel's locale settings
+
+
 ## v2.3.0 `2025-06-17`
 
 ### Changed
