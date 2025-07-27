@@ -84,7 +84,7 @@ class TranslateHelper
         LogController::log('info', 1, 'Language preference set via session: ' . $langCode);
 
         // also set a cookie for 1 year as backup (with proper path and domain)
-        $cookie = cookie($sessionAndCookieName, $langCode, 60 * 24 * 365, '/', null, false, false);
+        $cookie = cookie($sessionAndCookieName, $langCode, self::COOKIE_LIFETIME_MINUTES, '/', null, false, false);
         LogController::log('info', 1, 'Language preference set via cookie: ' . $langCode);
 
         // clear view cache to ensure updated translations are displayed immediately
