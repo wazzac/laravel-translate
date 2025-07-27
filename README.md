@@ -348,6 +348,17 @@ class YourLanguageController extends Controller
 
 The `@transl8auto()` directive is the most powerful feature of this package. Unlike the basic `@transl8()` directive that requires you to specify the target language, the auto directive automatically translates content based on the user's preferred language stored in their session or cookie.
 
+> **🚀 Smart Features**: When users change their language preference, the package automatically **clears view cache** to ensure immediate translation updates, and the included **SetLocaleMiddleware** ensures Laravel's built-in localization (`__()`, validation messages, dates) all use the same language consistently.
+
+### Key Features
+
+✅ **Automatic Cache Management**: View cache is automatically cleared when language changes
+✅ **Laravel Locale Integration**: SetLocaleMiddleware ensures unified language experience
+✅ **Persistent Preferences**: Uses both session and cookies for language persistence
+✅ **Intelligent Fallbacks**: Multiple fallback levels ensure content is always displayed
+✅ **Performance Optimized**: Database caching minimizes API calls
+✅ **Zero Configuration**: Works out of the box with sensible defaults
+
 ### How Auto-Translation Works
 
 The auto-translation system follows this priority order:
@@ -436,7 +447,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Show success message (optional)
                 showNotification('Language preference updated!', 'success');
 
-                // Reload page to see translations
+                // Note: The package automatically clears view cache and sets Laravel locale
+                // Reload page to see translations with the new language
                 setTimeout(() => {
                     window.location.reload();
                 }, 500);
@@ -573,9 +585,12 @@ class LanguageController extends Controller
 
 1. **Fallback Strategy**: Always ensure English content is available as a fallback
 2. **Performance**: The first translation of each phrase will hit the Google API, subsequent requests use the database
-3. **User Experience**: Consider showing a loading indicator during language changes
-4. **SEO**: For SEO-sensitive applications, consider implementing hreflang tags
-5. **Testing**: Test with different language combinations to ensure proper fallbacks
+3. **Cache Management**: View cache is automatically cleared when language changes - no manual intervention needed
+4. **Middleware Integration**: The SetLocaleMiddleware automatically handles Laravel locale setting for consistent experience
+5. **User Experience**: Consider showing a loading indicator during language changes
+6. **SEO**: For SEO-sensitive applications, consider implementing hreflang tags
+7. **Testing**: Test with different language combinations to ensure proper fallbacks
+8. **Language Files**: Combine `@transl8auto()` with Laravel's `__()` helper for system messages
 
 ### Troubleshooting Auto-Translation
 
@@ -588,6 +603,12 @@ class LanguageController extends Controller
 
 **Problem**: Some phrases not translating
 - **Solution**: Check your Google API quotas and error logs
+
+**Problem**: View cache not clearing after language change
+- **Solution**: The package automatically clears view cache, but if issues persist, manually run `php artisan view:clear`
+
+**Problem**: Laravel's built-in localization not syncing with translation system
+- **Solution**: Ensure the `SetLocaleMiddleware` is properly registered in your middleware stack
 
 ### Example: Complete Language Switcher Component
 
