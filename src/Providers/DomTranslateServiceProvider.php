@@ -76,10 +76,7 @@ class DomTranslateServiceProvider extends BaseServiceProvider
         // ---------------
         // Register an auto translation directive that will use a session or cookie to determine the destination language
         Blade::directive('transl8auto', function ($string) {
-            return TranslateHelper::autoTransl8(
-                $string, // what we want to translate
-                TranslateHelper::currentDefinedLanguageCode() // this will use the current user's language preference (saved in session or cookie)
-            );
+            return "<?= \\Wazza\\DomTranslate\\Helpers\\TranslateHelper::autoTransl8({$string}, \\Wazza\\DomTranslate\\Helpers\\TranslateHelper::currentDefinedLanguageCode()); ?>";
         });
 
         // ---------------
