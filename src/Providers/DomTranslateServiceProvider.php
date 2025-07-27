@@ -49,7 +49,7 @@ class DomTranslateServiceProvider extends BaseServiceProvider
     }
 
     /**
-     * Make config published optional by merging the config from the package.
+     * Make config publication optional by merging the config from the package.
      * Name of the config file - config('dom_translate')
      *
      * @return  void
