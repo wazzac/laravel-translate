@@ -72,7 +72,6 @@ class TranslateHelper
      *
      * @param string $langCode
      * @param string $sessionAndCookieName
-     * @param string $return The type of response to return, defaults to 'json' or 'response
      * @return \Illuminate\Http\JsonResponse
      */
     public static function setLanguage(
