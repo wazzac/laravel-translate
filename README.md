@@ -3,6 +3,7 @@
     <a href="https://github.com/WarrenGIT/domTranslate/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/wazzac/domTranslate"></a>
     <a href="https://github.com/WarrenGIT/domTranslate/blob/main/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/WarrenGIT/domTranslate"></a>
     <a href="https://github.com/WarrenGIT/domTranslate"><img alt="GitHub version" src="https://img.shields.io/github/v/tag/WarrenGIT/domTranslate?label=version&sort=semver"></a>
+    <a href="https://coff.ee/wazzac"><img alt="Buy me a coffee" src="https://img.shields.io/badge/Buy%20me%20a%20coffee-☕-yellow?style=flat&logo=buy-me-a-coffee&logoColor=white"></a>
 </p>
 
 
