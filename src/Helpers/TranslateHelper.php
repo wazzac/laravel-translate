@@ -34,7 +34,7 @@ class TranslateHelper
         // try and translate using the TranslateController
         try {
             // Access the TranslateController singleton from the service container
-            $translator = new TranslateController();
+            $translator = app(TranslateController::class);
 
             // return the translated text
             return $translator->translate(
