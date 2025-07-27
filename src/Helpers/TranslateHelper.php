@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 class TranslateHelper
 {
     private const DEFAULT_SYSTEM_LANGUAGE = 'en';
+    private const COOKIE_LIFETIME_MINUTES = 60 * 24 * 365; // 1 year
 
     /**
      * Auto-translate using the current user's language preference
