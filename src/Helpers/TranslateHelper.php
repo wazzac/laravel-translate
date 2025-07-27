@@ -98,13 +98,15 @@ class TranslateHelper
         // return a JSON response with the new language preference
         return response()->json([
             'message' => 'Language preference set successfully.',
-            'language' => $langCode,
-            'cache_cleared' => true
+            'language' => $langCode
         ])->cookie($cookie);
     }
 
     /**
      * Get the current language preference
+     *
+     * @param string|null $sessionAndCookieName
+     * @return \Illuminate\Http\JsonResponse
      */
     public static function getLanguage(?string $sessionAndCookieName = null)
     {
