@@ -68,5 +68,12 @@ return [
     // ------------------------------------------------------------
     'session' => [
         'language_key' => env('DOM_TRANSLATE_SESSION_KEY', 'app_language_code'), // session/cookie key name
+    ],
+
+    // Middleware configuration for automatic locale setting
+    // ------------------------------------------------------------
+    'middleware' => [
+        'auto_locale' => env('DOM_TRANSLATE_MIDDLEWARE_ENABLED', true), // enable/disable SetLocaleMiddleware
+        'auto_apply' => env('DOM_TRANSLATE_MIDDLEWARE_AUTO_APPLY', true), // automatically apply to 'web' middleware group
     ]
 ];

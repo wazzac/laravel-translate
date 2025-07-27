@@ -87,10 +87,19 @@ class TranslateHelper
         $cookie = cookie($sessionAndCookieName, $langCode, 60 * 24 * 365, '/', null, false, false);
         LogController::log('info', 1, 'Language preference set via cookie: ' . $langCode);
 
+        // clear view cache to ensure updated translations are displayed immediately
+        try {
+            \Illuminate\Support\Facades\Artisan::call('view:clear');
+            LogController::log('info', 3, 'View cache cleared after language change to: ' . $langCode);
+        } catch (\Exception $e) {
+            LogController::log('warning', 2, 'Failed to clear view cache: ' . $e->getMessage());
+        }
+
         // return a JSON response with the new language preference
         return response()->json([
             'message' => 'Language preference set successfully.',
-            'language' => $langCode
+            'language' => $langCode,
+            'cache_cleared' => true
         ])->cookie($cookie);
     }
 

@@ -35,6 +35,17 @@ class DomTranslateServiceProvider extends BaseServiceProvider
         if (config('dom_translate.routes.enabled', true)) {
             $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
         }
+
+        // Register the SetLocale middleware if enabled in config
+        if (config('dom_translate.middleware.auto_locale', true)) {
+            $router = $this->app['router'];
+            $router->aliasMiddleware('dom-translate.locale', \Wazza\DomTranslate\Http\Middleware\SetLocaleMiddleware::class);
+
+            // Auto-apply to web middleware group if configured
+            if (config('dom_translate.middleware.auto_apply', true)) {
+                $router->pushMiddlewareToGroup('web', \Wazza\DomTranslate\Http\Middleware\SetLocaleMiddleware::class);
+            }
+        }
     }
 
     /**

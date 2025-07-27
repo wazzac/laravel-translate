@@ -74,6 +74,8 @@ DOM_TRANSLATE_ROUTES_ENABLED=true
 DOM_TRANSLATE_ROUTES_PREFIX=api/translate
 DOM_TRANSLATE_ROUTES_MIDDLEWARE=web
 DOM_TRANSLATE_SESSION_KEY=app_language_code
+DOM_TRANSLATE_MIDDLEWARE_ENABLED=true
+DOM_TRANSLATE_MIDDLEWARE_AUTO_APPLY=true
 ```
 
 -   If `DOM_TRANSLATE_USE_SESSION` is `true`, translations will be saved in the session and used as the first point of retrieval.
@@ -655,6 +657,175 @@ export default {
     }
 }
 </script>
+```
+
+## Laravel Locale Integration (SetLocaleMiddleware)
+
+The package includes an automatic Laravel locale middleware that seamlessly integrates with Laravel's built-in localization system. This ensures that both your `@transl8auto()` directives AND Laravel's native `__()`, `trans()`, and validation messages all use the same user-selected language.
+
+### How It Works
+
+The `SetLocaleMiddleware` automatically:
+
+1. **Reads User Preference**: Gets the user's language preference from session/cookie
+2. **Sets Laravel Locale**: Calls `app()->setLocale($language)` on every request
+3. **Carbon Integration**: Also sets Carbon date localization if available
+4. **Unified Experience**: Ensures consistent language across your entire application
+
+### Automatic Setup (Default)
+
+By default, the middleware is **automatically enabled and applied** to all web routes. No configuration needed!
+
+### Manual Configuration
+
+If you want to customize the middleware behavior:
+
+```env
+# Enable/disable the SetLocale middleware (default: true)
+DOM_TRANSLATE_MIDDLEWARE_ENABLED=true
+
+# Auto-apply to 'web' middleware group (default: true)
+DOM_TRANSLATE_MIDDLEWARE_AUTO_APPLY=true
+```
+
+### Manual Middleware Usage
+
+If you disabled auto-apply, you can manually add the middleware to specific routes:
+
+```php
+// Apply to specific routes
+Route::group(['middleware' => ['dom-translate.locale']], function () {
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/profile', [ProfileController::class, 'show']);
+});
+
+// Or apply to individual routes
+Route::get('/settings', [SettingsController::class, 'index'])
+    ->middleware('dom-translate.locale');
+```
+
+### Benefits of Laravel Locale Integration
+
+#### Before (without middleware):
+```blade
+{{-- Mixed language experience --}}
+<h1>@transl8auto("Welcome")</h1>  {{-- Translated to French --}}
+<p>{{ __('validation.required') }}</p>  {{-- Still in English --}}
+<p>{{ $user->created_at->diffForHumans() }}</p>  {{-- English dates --}}
+```
+
+#### After (with middleware):
+```blade
+{{-- Unified language experience --}}
+<h1>@transl8auto("Welcome")</h1>  {{-- Translated to French --}}
+<p>{{ __('validation.required') }}</p>  {{-- Also in French --}}
+<p>{{ $user->created_at->diffForHumans() }}</p>  {{-- French dates --}}
+```
+
+### Creating Language Files
+
+To use Laravel's built-in localization alongside the package, create language files:
+
+```php
+// resources/lang/fr/validation.php
+<?php
+return [
+    'required' => 'Le champ :attribute est obligatoire.',
+    'email' => 'Le champ :attribute doit être une adresse e-mail valide.',
+    // ... more translations
+];
+
+// resources/lang/fr/messages.php
+<?php
+return [
+    'welcome' => 'Bienvenue',
+    'goodbye' => 'Au revoir',
+    // ... more translations
+];
+```
+
+### Best Practices
+
+1. **Combine Both Systems**: Use `@transl8auto()` for dynamic content and `__()` for static/system messages
+2. **Language Files**: Create Laravel language files for form validation, error messages, etc.
+3. **Fallbacks**: Both systems fall back to English if translations aren't available
+4. **Performance**: Laravel's `__()` helper uses file-based caching, while `@transl8auto()` uses database caching
+
+### Example: Complete Multilingual Form
+
+```blade
+<form method="POST" action="/contact">
+    @csrf
+
+    {{-- Dynamic content using @transl8auto --}}
+    <h1>@transl8auto("Contact Us")</h1>
+    <p>@transl8auto("We'd love to hear from you!")</p>
+
+    <div class="form-group">
+        <label for="name">@transl8auto("Your Name")</label>
+        <input type="text" name="name" id="name" required>
+        {{-- Laravel validation messages --}}
+        @error('name')
+            <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <div class="form-group">
+        <label for="email">@transl8auto("Email Address")</label>
+        <input type="email" name="email" id="email" required>
+        @error('email')
+            <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <div class="form-group">
+        <label for="message">@transl8auto("Message")</label>
+        <textarea name="message" id="message" rows="5" required></textarea>
+        @error('message')
+            <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        @transl8auto("Send Message")
+    </button>
+</form>
+```
+
+### Advanced: Custom Middleware Implementation
+
+If you need custom locale logic, you can create your own middleware:
+
+```php
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Wazza\DomTranslate\Helpers\TranslateHelper;
+
+class CustomLocaleMiddleware
+{
+    public function handle(Request $request, Closure $next)
+    {
+        // Custom logic: maybe check user's profile settings first
+        $language = auth()->user()?->preferred_language
+                    ?? TranslateHelper::currentDefinedLanguageCode();
+
+        // Additional locale mapping if needed
+        $localeMap = [
+            'zh' => 'zh_CN',
+            'pt' => 'pt_BR',
+            // ... more mappings
+        ];
+
+        $locale = $localeMap[$language] ?? $language;
+        app()->setLocale($locale);
+
+        return $next($request);
+    }
+}
 ```
 
 ## Future Development (Backlog)
