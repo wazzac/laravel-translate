@@ -54,5 +54,19 @@ return [
     'language' => [
         'src' => env('DOM_TRANSLATE_LANG_SRC', 'en'), // default source language
         'dest' => env('DOM_TRANSLATE_LANG_DEST', 'af'), // default destination language
+    ],
+
+    // Route configuration for language endpoints
+    // ------------------------------------------------------------
+    'routes' => [
+        'enabled' => env('DOM_TRANSLATE_ROUTES_ENABLED', true), // enable/disable automatic route registration
+        'prefix' => env('DOM_TRANSLATE_ROUTES_PREFIX', 'api/translate'), // route prefix
+        'middleware' => env('DOM_TRANSLATE_ROUTES_MIDDLEWARE', 'web'), // middleware to apply
+    ],
+
+    // Session configuration for language preference storage
+    // ------------------------------------------------------------
+    'session' => [
+        'language_key' => env('DOM_TRANSLATE_SESSION_KEY', 'app_language_code'), // session/cookie key name
     ]
 ];

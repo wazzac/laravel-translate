@@ -30,10 +30,15 @@ class DomTranslateServiceProvider extends BaseServiceProvider
 
         // Load the migrations
         $this->loadMigrationsFrom($this->dbMigrationsPath());
+
+        // Load routes if enabled in config
+        if (config('dom_translate.routes.enabled', true)) {
+            $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
+        }
     }
 
     /**
-     * Make config publishment optional by merging the config from the package.
+     * Make config published optional by merging the config from the package.
      * Name of the config file - config('dom_translate')
      *
      * @return  void
