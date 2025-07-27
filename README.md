@@ -142,7 +142,7 @@ Follow these detailed steps to obtain your Google Translate API key:
 #### Step 6: Add API Key to Your Laravel Project
 1. **Add to .env file**: Copy your API key to your Laravel `.env` file:
    ```env
-   DOM_TRANSLATE_GOOGLE_KEY=AIzaSyDaGmWKa4JsXZ-HjGw7ISLn_3namBGewQe
+   DOM_TRANSLATE_GOOGLE_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
    ```
 2. **Clear config cache**:
    ```bash
