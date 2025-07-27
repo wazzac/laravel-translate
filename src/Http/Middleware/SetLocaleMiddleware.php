@@ -31,13 +31,11 @@ class SetLocaleMiddleware
         app()->setLocale($language);
 
         // Optional: Set locale for Carbon dates as well
-        if (class_exists('\Carbon\Carbon')) {
-            try {
-                \Carbon\Carbon::setLocale($language);
-            } catch (\Exception $e) {
-                // Fallback to English if the locale is not supported by Carbon
-                \Carbon\Carbon::setLocale('en');
-            }
+        try {
+            \Carbon\Carbon::setLocale($language);
+        } catch (\Exception $e) {
+            // Fallback to English if the locale is not supported by Carbon
+            \Carbon\Carbon::setLocale('en');
         }
 
         return $next($request);
