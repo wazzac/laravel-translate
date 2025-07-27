@@ -16,12 +16,13 @@ class TranslateHelper
      *
      * @param string $text
      * @param string|null $targetLanguage
+     * @param string|null $sessionAndCookieName
      * @return string
      */
     public static function autoTransl8(
         string $text,
         ?string $targetLanguage = null,
-        string $sessionAndCookieName = 'app_language_code'
+        ?string $sessionAndCookieName = null
     ): string {
         // use the current language if no target specified
         $language = $targetLanguage ?? self::currentDefinedLanguageCode($sessionAndCookieName);
@@ -56,10 +57,15 @@ class TranslateHelper
     /**
      * Get the current user's preferred language
      *
+     * @param string|null $sessionAndCookieName
      * @return string
      */
-    public static function currentDefinedLanguageCode(string $sessionAndCookieName = 'app_language_code'): string
+    public static function currentDefinedLanguageCode(?string $sessionAndCookieName = null): string
     {
+        // get the session or cookie name from config if not provided
+        $sessionAndCookieName = $sessionAndCookieName ?? config('dom_translate.session.language_key', 'app_language_code');
+
+        // return the preferred language set in session or cookie, or default to app locale
         return session($sessionAndCookieName) // preferred language set in session (user select a language from a dropdown and we set it in a long session)
             ?? request()->cookie($sessionAndCookieName) // check for a cookie set by the app (..or, we set the selected language in a cookie)
             ?? config('dom_translate.language.dest') // our default destination language defined in the translation config
@@ -71,13 +77,16 @@ class TranslateHelper
      * Set the user's preferred language and return a json response with a cookie
      *
      * @param string $langCode
-     * @param string $sessionAndCookieName
+     * @param string|null $sessionAndCookieName
      * @return \Illuminate\Http\JsonResponse
      */
     public static function setLanguage(
         string $langCode = 'en',
-        string $sessionAndCookieName = 'app_language_code'
+        ?string $sessionAndCookieName = null
     ) {
+        // Validate the language code
+        $sessionAndCookieName = $sessionAndCookieName ?? config('dom_translate.session.language_key', 'app_language_code');
+
         // store in session
         session([$sessionAndCookieName => $langCode]);
         LogController::log('info', 1, 'Language preference set via session: ' . $langCode);
@@ -97,9 +106,9 @@ class TranslateHelper
     /**
      * Get the current language preference
      */
-    public static function getLanguage()
+    public static function getLanguage(?string $sessionAndCookieName = null)
     {
-        $language = self::currentDefinedLanguageCode();
+        $language = self::currentDefinedLanguageCode($sessionAndCookieName);
 
         return response()->json([
             'language' => $language

@@ -22,9 +22,8 @@ class LanguageController extends Controller
         ]);
 
         $langCode = $request->input('language');
-        $sessionAndCookieName = config('dom_translate.session.language_key', 'app_language_code');
 
-        return TranslateHelper::setLanguage($langCode, $sessionAndCookieName);
+        return TranslateHelper::setLanguage($langCode);
     }
 
     /**

@@ -24,8 +24,7 @@ class SetLocaleMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         // Get the user's preferred language using the package's helper
-        $sessionAndCookieName = config('dom_translate.session.language_key', 'app_language_code');
-        $language = TranslateHelper::currentDefinedLanguageCode($sessionAndCookieName);
+        $language = TranslateHelper::currentDefinedLanguageCode();
 
         // Set the application locale for Laravel's built-in localization
         app()->setLocale($language);
