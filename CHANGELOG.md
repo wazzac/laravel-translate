@@ -1,5 +1,10 @@
 # Release Notes
 
+## v2.4.1 `2025-08-18`
+
+### Fixed
+- Fixed a bug where the `./src/Helpers/PhraseHelper.php` file was incorrectly named (started with a small p).
+
 ## v2.4.0 `2025-07-27`
 
 ### Added
