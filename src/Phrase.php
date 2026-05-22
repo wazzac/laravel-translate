@@ -77,7 +77,7 @@ class Phrase extends Model
         }
 
         // it's a collection, thus call saveMany()
-        return $this->translations()->saveMany($translations);
+        return new Collection($this->translations()->saveMany($translations));
     }
 
     /**
