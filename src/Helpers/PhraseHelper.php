@@ -10,9 +10,9 @@ class PhraseHelper
      * @param string $string
      * @return string
      */
-    public static function sanitise($string): string
+    public static function sanitise(?string $string): string
     {
-        return trim($string, '\'"');
+        return trim((string) $string, '\'"');
     }
 
     /**

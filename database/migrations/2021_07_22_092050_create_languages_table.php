@@ -1,26 +1,20 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
-class CreateLanguagesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         // (1) create the table
         Schema::create('domt_languages', function (Blueprint $table) {
-            // define tables engine and charset
-            $table->engine = 'InnoDB';
-            $table->charset = 'utf8mb4';
-            $table->collation = 'utf8mb4_unicode_ci';
-            // define columns
             $table->id();
             $table->string('code', 8)->nullable()->unique();
             $table->string('name', 30)->nullable()->index();
@@ -83,21 +77,23 @@ class CreateLanguagesTable extends Migration
             'yi' => 'Yiddish',
         ];
 
-        // loop and insert the language details (@todo - convert to a seed)
-        $currentDate = Carbon\Carbon::now();
+        // loop and insert the language details
+        $currentDate = Carbon::now();
         foreach ($languages as $code => $name) {
-            DB::statement("INSERT INTO `domt_languages` (`code`,`name`,`created_at`,`updated_at`) VALUES ('{$code}','{$name}', '{$currentDate}', '{$currentDate}')");
-            usleep(50000); // breathe DB, breathe... 1/20 of a second -> not really needed ;)
+            DB::table('domt_languages')->insert([
+                'code'       => $code,
+                'name'       => $name,
+                'created_at' => $currentDate,
+                'updated_at' => $currentDate,
+            ]);
         }
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('domt_languages');
     }
-}
+};

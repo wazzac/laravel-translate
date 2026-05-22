@@ -1,5 +1,42 @@
 # Release Notes
 
+## v2.5.0 `2026-05-22`
+
+### Added
+- **BingTranslate provider:** Full implementation of Azure Cognitive Translator v3 (`BingTranslate.php`). Set `DOM_TRANSLATE_PROVIDER=bing` and `DOM_TRANSLATE_BING_KEY=...` to use it alongside or instead of Google.
+- **LanguageFactory:** Added `database/factories/LanguageFactory.php` — the `Language` model factory was missing, causing `Language::newFactory()` to silently fall back to `PhraseFactory`.
+- **Laravel 12 support:** Package now targets `laravel/framework: ^12.0`.
+
+### Changed
+- **PHP minimum raised to `^8.2`:** Drops PHP 8.1 and aligns with Laravel 12's own requirement.
+- **Anonymous migration classes:** All three migration files converted to `return new class extends Migration {}` syntax (required for Laravel 9+ compatibility and Laravel 12 best practices).
+- **Return types on all Eloquent relationship methods:** `HasMany`, `BelongsTo`, and collection return types added across `Language`, `Phrase`, and `Translation` models.
+- **`CloudTranslateInterface::cloudTranslate()` return type:** Added `: string` to the interface contract, enforced on both `GoogleTranslate` and `BingTranslate`.
+- **Provider binding moved to `ServiceProvider::register()`:** `App::bind(CloudTranslateInterface::class, ...)` was previously called on every single translation request inside `TranslateController::translate()`. It is now bound once at container-registration time in `DomTranslateServiceProvider::register()`.
+- **`Phrase` union types:** `addTranslations()`, `removeTranslations()` now declare `Translation|Collection` parameter and return types.
+- **`PhraseHelper::sanitise()` null-safe:** Parameter changed to `?string` with an explicit `(string)` cast, preventing type errors when `null` is passed.
+- **Test suite modernised:** PHPUnit doc-comment annotations (`@test`, `@group`) replaced with PHP 8 attributes (`#[Test]`, `#[Group]`). SQLite test database switched from file path to `:memory:`. `APP_KEY` now configured in `phpunit.xml` and `getEnvironmentSetUp()` to prevent `MissingAppKeyException`.
+- **`BladeTranslateTest` skips without API key:** Test is now skipped (via `markTestSkipped()`) when `DOM_TRANSLATE_GOOGLE_KEY` is empty, instead of failing with an HTTP error.
+- **`LanguageControllerTest` correct base class:** Was erroneously extending `Tests\TestCase` (application-level); corrected to `Wazza\DomTranslate\Tests\TestCase`.
+- **Removed legacy `DatabaseTransactions` and `withFactories()`** from `TestCase` — incompatible with `DatabaseMigrations` and not available in modern Testbench.
+- **Removed deprecated `DispatchesJobs` and `ValidatesRequests`** traits from `BaseController` — removed in Laravel 11+.
+- **Autoload-dev namespace collision fixed:** Duplicate `"Wazza\\DomTranslate\\": "src/"` entry in `autoload-dev` removed; it conflicted with the canonical `autoload` entry and caused test namespace resolution issues.
+- **Removed `laravel/legacy-factories`** from `require-dev` — not needed with modern Eloquent factories.
+
+### Fixed
+- **SQL injection in languages migration:** `DB::statement("INSERT INTO ... '{$code}','{$name}'...")` replaced with `DB::table('domt_languages')->insert([...])` using parameterised arrays.
+- **`Language::newFactory()` wrong factory:** Was returning `PhraseFactory::new()` instead of the (newly created) `LanguageFactory`.
+- **`Phrase::removeTranslations()` missing `return`:** The single-item code path returned void instead of the `Translation` instance.
+- **`TranslateController` typo:** Exception message `"destincation"` corrected to `"destination"`.
+- **`BladeTranslateTest` static call:** `TranslateController::translate()` is not a static method; call corrected to `app(TranslateController::class)->translate()`.
+
+### Security
+- **Cookie `httpOnly` flag set to `true`** in `TranslateHelper::setLanguage()`: prevents JavaScript from reading the language preference cookie (XSS mitigation).
+- **Cookie `secure` flag** now honours `config('session.secure', false)` instead of being hard-coded `false`, ensuring the cookie is HTTPS-only on production.
+- **SQL injection eliminated** in the `domt_languages` migration seeding (see above).
+
+---
+
 ## v2.4.1 `2025-08-18`
 
 ### Fixed

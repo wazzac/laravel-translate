@@ -3,13 +3,11 @@
 namespace Wazza\DomTranslate\Controllers;
 
 use Illuminate\Support\Facades\App;
-use Wazza\DomTranslate\Controllers\BaseController;
-use Wazza\DomTranslate\Controllers\LogController;
-use Wazza\DomTranslate\Phrase;
-use Wazza\DomTranslate\Language;
-use Wazza\DomTranslate\Translation;
-use Wazza\DomTranslate\Helpers\PhraseHelper;
 use Wazza\DomTranslate\Contracts\CloudTranslateInterface;
+use Wazza\DomTranslate\Helpers\PhraseHelper;
+use Wazza\DomTranslate\Language;
+use Wazza\DomTranslate\Phrase;
+use Wazza\DomTranslate\Translation;
 use Exception;
 
 class TranslateController extends BaseController
@@ -154,20 +152,13 @@ class TranslateController extends BaseController
             }
 
             // ------------------------------------------------------------
-            // (4) We need to call the Cloud API to get the translation
+            // (4) Call the Cloud API to get the translation.
             LogController::log('notice', 1, 'Call API for Translation.');
 
             $defaultProvider = config('dom_translate.api.provider');
             LogController::log('notice', 2, 'Default API provider - ' . $defaultProvider);
 
-            $providerController = config('dom_translate.api.' . $defaultProvider . '.controller');
-            LogController::log('notice', 2, 'Provider Controller - ' . $providerController);
-
-            // bind the Provider Translation Controller with the `Cloud Translate Interface`
-            App::bind(CloudTranslateInterface::class, $providerController);
-            LogController::log('notice', 3, 'Provider Controller ' . $providerController . ' binded to the CloudTranslateInterface Class.');
-
-            // initiate the cloud translate request on the binded provider class
+            // Resolve the provider from the service container (bound in DomTranslateServiceProvider)
             $translatedString = App::make(CloudTranslateInterface::class)->cloudTranslate(
                 $srcPhrase,
                 $destCode,
@@ -182,7 +173,7 @@ class TranslateController extends BaseController
                 // (5.1) find the destination language id
                 $languageDest = Language::select('id')->where('code', $destCode)->first();
                 if (is_null($languageDest)) {
-                    throw new Exception('Translation could not be inserted into DB because the destincation language could not be loaded.');
+                    throw new Exception('Translation could not be inserted into DB because the destination language could not be loaded.');
                 }
                 LogController::log('notice', 1, 'Destination Language (code: ' . $languageDest->id . ') located at ID - ' . $languageDest->id);
 
