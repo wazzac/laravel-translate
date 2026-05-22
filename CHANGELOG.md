@@ -26,7 +26,7 @@
 ### Fixed
 - **SQL injection in languages migration:** `DB::statement("INSERT INTO ... '{$code}','{$name}'...")` replaced with `DB::table('domt_languages')->insert([...])` using parameterised arrays.
 - **`Language::newFactory()` wrong factory:** Was returning `PhraseFactory::new()` instead of the (newly created) `LanguageFactory`.
-- **`Phrase::removeTranslations()` missing `return`:** The single-item code path returned void instead of the `Translation` instance.
+- **`Phrase::removeTranslations()` single-item branch:** Added an early `return;` so the method does not continue into collection logic and call `pluck()` on a `Translation` instance.
 - **`TranslateController` typo:** Exception message `"destincation"` corrected to `"destination"`.
 - **`BladeTranslateTest` static call:** `TranslateController::translate()` is not a static method; call corrected to `app(TranslateController::class)->translate()`.
 
