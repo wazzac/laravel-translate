@@ -1,4 +1,4 @@
-﻿<p align="center">
+<p align="center">
     <a href="https://github.com/wazzac/laravel-translate/releases"><img alt="Version" src="https://img.shields.io/github/v/tag/wazzac/laravel-translate?label=version&sort=semver"></a>
     <a href="https://github.com/wazzac/laravel-translate/actions"><img alt="Tests" src="https://img.shields.io/badge/tests-passing-brightgreen"></a>
     <img alt="Laravel" src="https://img.shields.io/badge/Laravel-12.x-red?logo=laravel">
