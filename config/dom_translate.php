@@ -37,6 +37,7 @@ return [
             'endpoint' => "https://api.cognitive.microsofttranslator.com/translate",
             'action' => "POST",
             'key' => env('DOM_TRANSLATE_BING_KEY', null), // https://portal.azure.com/#home
+            'region' => env('DOM_TRANSLATE_BING_REGION', null), // optional (required for regional/multi-service resources)
         ],
         // ... add more providers here
     ],

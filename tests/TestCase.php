@@ -39,7 +39,7 @@ class TestCase extends OrchestraTestCase
      */
     protected function getEnvironmentSetUp($app): void
     {
-        $app['config']->set('app.key', env('APP_KEY', 'base64:2fl+Ktvkfl+Ktvkfl+Ktvkfl+Ktvkfl+Ktvkfl+Ktvk='));
+        $app['config']->set('app.key', 'base64:QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE=');
         $app['config']->set('app.debug', true);
         $app['config']->set('database.default', 'testdb');
         $app['config']->set('database.connections.testdb', [

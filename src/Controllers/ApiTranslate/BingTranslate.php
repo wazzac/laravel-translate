@@ -38,6 +38,15 @@ class BingTranslate implements CloudTranslateInterface
         LogController::log('notice', 2, '[Bing] Translate API request initiated.');
 
         $client = new Client(['http_errors' => false]);
+        $headers = [
+            'Ocp-Apim-Subscription-Key' => $this->defaultProvider['key'],
+            'Content-Type'              => 'application/json',
+            'Accept'                    => 'application/json',
+        ];
+
+        if (!empty($this->defaultProvider['region'])) {
+            $headers['Ocp-Apim-Subscription-Region'] = $this->defaultProvider['region'];
+        }
 
         $response = $client->request(
             $this->defaultProvider['action'],
@@ -48,11 +57,7 @@ class BingTranslate implements CloudTranslateInterface
                     'from'        => $langsrc,
                     'to'          => $langdest,
                 ],
-                'headers' => [
-                    'Ocp-Apim-Subscription-Key' => $this->defaultProvider['key'],
-                    'Content-Type'              => 'application/json',
-                    'Accept'                    => 'application/json',
-                ],
+                'headers' => $headers,
                 'json' => [
                     ['Text' => $phrase],
                 ],
