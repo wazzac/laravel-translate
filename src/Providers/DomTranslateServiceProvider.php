@@ -68,8 +68,8 @@ class DomTranslateServiceProvider extends BaseServiceProvider
             return new TranslateController();
         });
 
-        // Bind the CloudTranslateInterface to the configured provider once (not per-request).
-        $this->app->bind(CloudTranslateInterface::class, function () {
+        // Bind the CloudTranslateInterface to the configured provider as a singleton (resolved once).
+        $this->app->singleton(CloudTranslateInterface::class, function ($app) {
             $provider = config('dom_translate.api.provider', 'google');
             $controller = config('dom_translate.api.' . $provider . '.controller');
 
@@ -81,7 +81,7 @@ class DomTranslateServiceProvider extends BaseServiceProvider
                 throw new \RuntimeException("DOM Translate: Provider controller [{$controller}] must implement CloudTranslateInterface.");
             }
 
-            return new $controller();
+            return $app->make($controller);
         });
 
         // ---------------

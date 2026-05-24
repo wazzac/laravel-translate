@@ -251,9 +251,9 @@ Translates to whatever language is stored in the user's session or cookie. See [
 ```blade
 <select id="languageSelector">
     <option value="en">English</option>
-    <option value="fr">FranÃ§ais</option>
+    <option value="fr">Français</option>
     <option value="de">Deutsch</option>
-    <option value="es">EspaÃ±ol</option>
+    <option value="es">Español</option>
     <option value="nl">Nederlands</option>
     <option value="af">Afrikaans</option>
 </select>
@@ -289,9 +289,9 @@ selector.addEventListener('change', async function () {
 <template>
   <select v-model="language" @change="switchLanguage">
     <option value="en">English</option>
-    <option value="fr">FranÃ§ais</option>
+    <option value="fr">Français</option>
     <option value="de">Deutsch</option>
-    <option value="es">EspaÃ±ol</option>
+    <option value="es">Español</option>
   </select>
 </template>
 

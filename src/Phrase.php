@@ -68,16 +68,25 @@ class Phrase extends Model
     /**
      * Add multiple Translations to a Phrase.
      *
-     * @param Translation|Collection $translations
+     * Accepts a single Translation, an Eloquent Collection, a plain array, or
+     * any other iterable of Translation models. Arrays and other iterables are
+     * normalised into a Collection before persisting, so callers are not
+     * forced into a breaking signature change when passing arrays.
+     *
+     * @param Translation|iterable<Translation> $translations
      */
-    public function addTranslations(Translation|Collection $translations): Translation|Collection
+    public function addTranslations(Translation|iterable $translations): Translation|Collection
     {
         if ($translations instanceof Translation) {
             return $this->addTranslation($translations);
         }
 
-        // it's a collection, thus call saveMany()
-        return new Collection($this->translations()->saveMany($translations));
+        // Normalise arrays / other iterables into a Collection before persisting.
+        $collection = $translations instanceof Collection
+            ? $translations
+            : new Collection($translations);
+
+        return new Collection($this->translations()->saveMany($collection));
     }
 
     /**
