@@ -77,6 +77,10 @@ class DomTranslateServiceProvider extends BaseServiceProvider
                 throw new \RuntimeException("DOM Translate: No valid controller found for provider [{$provider}].");
             }
 
+            if (!is_a($controller, CloudTranslateInterface::class, true)) {
+                throw new \RuntimeException("DOM Translate: Provider controller [{$controller}] must implement CloudTranslateInterface.");
+            }
+
             return new $controller();
         });
 

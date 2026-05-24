@@ -10,9 +10,9 @@
 
 # Laravel Translate Package
 
-A Laravel package that uses Blade directives to provide real-time translations for any phrase in your views â€” backed by a smart caching layer (session â†’ database â†’ cloud API) to minimise API calls and costs.
+A Laravel package that uses Blade directives to provide real-time translations for any phrase in your views — backed by a smart caching layer (session → database → cloud API) to minimise API calls and costs.
 
-_Write your Blade templates in English, serve every visitor in their own language â€” automatically._
+_Write your Blade templates in English, serve every visitor in their own language — automatically._
 
 ---
 
@@ -40,9 +40,9 @@ _Write your Blade templates in English, serve every visitor in their own languag
 
 Three database tables (`domt_languages`, `domt_phrases`, `domt_translations`) power a three-level cache:
 
-1. **Session** _(fastest)_ â€” if `DOM_TRANSLATE_USE_SESSION=true`, translations are stored in the user's session after the first retrieval.
-2. **Database** _(fast)_ â€” if `DOM_TRANSLATE_USE_DATABASE=true` _(default)_, translations are stored and retrieved from the DB. Each phrase is hashed (SHA-256 HMAC) and stored in an indexed column for sub-millisecond lookups.
-3. **Cloud API** _(fallback)_ â€” only when no cached translation exists. The result is immediately stored in the DB (and session) to prevent future API calls.
+1. **Session** _(fastest)_ — if `DOM_TRANSLATE_USE_SESSION=true`, translations are stored in the user's session after the first retrieval.
+2. **Database** _(fast)_ — if `DOM_TRANSLATE_USE_DATABASE=true` _(default)_, translations are stored and retrieved from the DB. Each phrase is hashed (SHA-256 HMAC) and stored in an indexed column for sub-millisecond lookups.
+3. **Cloud API** _(fallback)_ — only when no cached translation exists. The result is immediately stored in the DB (and session) to prevent future API calls.
 
 > Laravel caches compiled Blade views, so unchanged pages make zero database or API calls after the first render.
 
@@ -111,7 +111,7 @@ DOM_TRANSLATE_LANG_SRC=en              # Default source language (ISO 639-1)
 DOM_TRANSLATE_LANG_DEST=af             # Default destination language (ISO 639-1)
 
 # Phrase hashing
-DOM_TRANSLATE_HASH_SALT=DzBQ2DxKhNaF  # Change this â€” used in HMAC hash
+DOM_TRANSLATE_HASH_SALT=DzBQ2DxKhNaF  # Change this — used in HMAC hash
 DOM_TRANSLATE_HASH_ALGO=sha256
 
 # Logging (0=off, 1=high, 2=mid, 3=verbose)
@@ -140,8 +140,8 @@ DOM_TRANSLATE_MIDDLEWARE_AUTO_APPLY=true
 ### Google Cloud Translation Setup
 
 1. Visit [Google Cloud Console](https://console.cloud.google.com/) and create a project.
-2. Enable **Cloud Translation API** under _APIs & Services â†’ Library_.
-3. Create an API key under _APIs & Services â†’ Credentials_.
+2. Enable **Cloud Translation API** under _APIs & Services → Library_.
+3. Create an API key under _APIs & Services → Credentials_.
 4. Restrict the key to **Cloud Translation API** to limit exposure.
 5. Add to `.env`:
    ```env
@@ -234,15 +234,15 @@ Translates to whatever language is stored in the user's session or cookie. See [
 
 ## Auto-Translation (`@transl8auto`)
 
-`@transl8auto` is the most powerful directive. It reads the user's language preference (set via a language switcher) and translates accordingly â€” no per-phrase language specification needed.
+`@transl8auto` is the most powerful directive. It reads the user's language preference (set via a language switcher) and translates accordingly — no per-phrase language specification needed.
 
 ### Language priority order
 
-1. **Session** â€” `session('app_language_code')`
-2. **Cookie** â€” `cookie('app_language_code')`
-3. **Config default** â€” `dom_translate.language.dest`
-4. **App locale** â€” `config('app.locale')`
-5. **English** â€” final fallback
+1. **Session** — `session('app_language_code')`
+2. **Cookie** — `cookie('app_language_code')`
+3. **Config default** — `dom_translate.language.dest`
+4. **App locale** — `config('app.locale')`
+5. **English** — final fallback
 
 ### Building a language switcher
 
@@ -377,7 +377,7 @@ class LanguageController extends Controller
 
 ## SetLocale Middleware
 
-`SetLocaleMiddleware` automatically syncs Laravel's application locale â€” and Carbon's locale â€” to the user's language preference on every request.
+`SetLocaleMiddleware` automatically syncs Laravel's application locale — and Carbon's locale — to the user's language preference on every request.
 
 This ensures `__()`, `trans()`, `@lang`, validation messages, and Carbon date formatting all use the same language as the translate directives.
 
@@ -431,19 +431,19 @@ return TranslateHelper::setLanguage('de');
 
 If you are upgrading from v2.4.x:
 
-1. **Re-publish migrations** â€” the migration files have been updated to anonymous class syntax (required by Laravel 12). If you have already run the old migrations, no action is needed for existing databases. For fresh installs, re-publish:
+1. **Re-publish migrations** — the migration files have been updated to anonymous class syntax (required by Laravel 12). If you have already run the old migrations, no action is needed for existing databases. For fresh installs, re-publish:
    ```bash
    php artisan vendor:publish --tag="dom-translate-migrations" --force
    php artisan migrate
    ```
 
-2. **No breaking changes** â€” all Blade directives, config keys, and `.env` variables remain identical.
+2. **No breaking changes** — all Blade directives, config keys, and `.env` variables remain identical.
 
-3. **BingTranslate is now implemented** â€” if you set `DOM_TRANSLATE_PROVIDER=bing` in your `.env`, it will now work with the Azure Cognitive Translator v3 API.
+3. **BingTranslate is now implemented** — if you set `DOM_TRANSLATE_PROVIDER=bing` in your `.env`, it will now work with the Azure Cognitive Translator v3 API.
 
-4. **Cookie security** â€” the language preference cookie is now `httpOnly=true` (XSS protection). This is transparent to your application.
+4. **Cookie security** — the language preference cookie is now `httpOnly=true` (XSS protection). This is transparent to your application.
 
-5. **`DOM_TRANSLATE_HASH_SALT`** â€” if you are using a custom salt, ensure it remains set in your `.env` to preserve existing hash lookups in the database.
+5. **`DOM_TRANSLATE_HASH_SALT`** — if you are using a custom salt, ensure it remains set in your `.env` to preserve existing hash lookups in the database.
 
 ---
 
