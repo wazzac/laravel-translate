@@ -91,8 +91,16 @@ class TranslateHelper
         session([$sessionAndCookieName => $langCode]);
         LogController::log('info', 1, 'Language preference set via session: ' . $langCode);
 
-        // also set a cookie for 1 year as backup (with proper path and domain)
-        $cookie = cookie($sessionAndCookieName, $langCode, self::COOKIE_LIFETIME_MINUTES, '/', null, false, false);
+        // also set a cookie for 1 year as backup — httpOnly and secure flags follow app config
+        $cookie = cookie(
+            $sessionAndCookieName,
+            $langCode,
+            self::COOKIE_LIFETIME_MINUTES,
+            '/',
+            null,
+            config('session.secure', false), // honour app HTTPS setting
+            true  // httpOnly — prevents JS access (XSS protection)
+        );
         LogController::log('info', 1, 'Language preference set via cookie: ' . $langCode);
 
         // return a JSON response with the new language preference

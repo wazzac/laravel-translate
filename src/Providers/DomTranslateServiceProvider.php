@@ -4,6 +4,7 @@ namespace Wazza\DomTranslate\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Illuminate\Support\Facades\Blade;
+use Wazza\DomTranslate\Contracts\CloudTranslateInterface;
 use Wazza\DomTranslate\Helpers\TranslateHelper;
 use Wazza\DomTranslate\Controllers\TranslateController;
 
@@ -62,9 +63,25 @@ class DomTranslateServiceProvider extends BaseServiceProvider
             'dom_translate'
         );
 
-        // Register the service the package provides as a singleton.
+        // Register the TranslateController as a singleton.
         $this->app->singleton(TranslateController::class, function () {
             return new TranslateController();
+        });
+
+        // Bind the CloudTranslateInterface to the configured provider as a singleton (resolved once).
+        $this->app->singleton(CloudTranslateInterface::class, function ($app) {
+            $provider = config('dom_translate.api.provider', 'google');
+            $controller = config('dom_translate.api.' . $provider . '.controller');
+
+            if (empty($controller) || !class_exists($controller)) {
+                throw new \RuntimeException("DOM Translate: No valid controller found for provider [{$provider}].");
+            }
+
+            if (!is_a($controller, CloudTranslateInterface::class, true)) {
+                throw new \RuntimeException("DOM Translate: Provider controller [{$controller}] must implement CloudTranslateInterface.");
+            }
+
+            return $app->make($controller);
         });
 
         // ---------------

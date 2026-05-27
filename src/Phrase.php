@@ -4,15 +4,16 @@ namespace Wazza\DomTranslate;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Collection;
 use Wazza\DomTranslate\Database\Factories\PhraseFactory;
-use Wazza\DomTranslate\Translation;
-use Wazza\DomTranslate\Language;
 
 class Phrase extends Model
 {
     use HasFactory;
 
-    public static function newFactory()
+    public static function newFactory(): PhraseFactory
     {
         return PhraseFactory::new();
     }
@@ -26,97 +27,86 @@ class Phrase extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'hash', 'value'
     ];
 
     /**
-     * Method to return a 'one-to-many' relationship. All Translations for a given Phrase
-     * @return type
+     * All Translations for a given Phrase.
      */
-    public function translations()
+    public function translations(): HasMany
     {
         return $this->hasMany(Translation::class);
     }
 
     /**
-     * Method to return a `many-to-one` relationship. Showing the Language for the given Phrase
-     * @return type
+     * The Language for the given Phrase.
      */
-    public function language()
+    public function language(): BelongsTo
     {
         return $this->belongsTo(Language::class, 'language_id', 'id');
     }
 
-    /* --------------------- */
-    /* -- Count ------------ */
-
     /**
-     * Return a count of linked Translations
-     *
-     * @return integer
+     * Return a count of linked Translations.
      */
-    public function countTranslations()
+    public function countTranslations(): int
     {
         return $this->translations()->count();
     }
 
-    /* --------------------- */
-    /* -- ADD Translation -- */
-
     /**
-     * Add a Translation to a Phrase
-     *
-     * @param \Wazza\DomTranslate\Translation $translation
-     * @return \Wazza\DomTranslate\Translation
+     * Add a Translation to a Phrase.
      */
-    public function addTranslation(Translation $translation)
+    public function addTranslation(Translation $translation): Translation
     {
         return $this->translations()->save($translation);
     }
 
     /**
-     * Add multiple Translation to the Phrase
+     * Add multiple Translations to a Phrase.
      *
-     * @param \Wazza\DomTranslate\Translation|collection $translations
-     * @return \Wazza\DomTranslate\Translation
+     * Accepts a single Translation, an Eloquent Collection, a plain array, or
+     * any other iterable of Translation models. Arrays and other iterables are
+     * normalised into a Collection before persisting, so callers are not
+     * forced into a breaking signature change when passing arrays.
+     *
+     * @param Translation|iterable<Translation> $translations
      */
-    public function addTranslations($translations)
+    public function addTranslations(Translation|iterable $translations): Translation|Collection
     {
         if ($translations instanceof Translation) {
             return $this->addTranslation($translations);
         }
 
-        // it's a collection, thus call saveMany()
-        return $this->translations()->saveMany($translations);
+        // Normalise arrays / other iterables into a Collection before persisting.
+        $collection = $translations instanceof Collection
+            ? $translations
+            : new Collection($translations);
+
+        return new Collection($this->translations()->saveMany($collection));
     }
 
-    /* ------------------------ */
-    /* -- REMOVE Translation -- */
-
     /**
-     * Remove a Translation from the Phrase
-     *
-     * @param \Wazza\DomTranslate\Translation $translation
-     * @return void
+     * Remove a Translation from the Phrase.
      */
-    public function removeTranslation(Translation $translation)
+    public function removeTranslation(Translation $translation): void
     {
         $translation->delete();
     }
 
     /**
-     * Remove a Translation (..or multiple Translations) from the Phrase
+     * Remove a Translation or collection of Translations from the Phrase.
      *
-     * @param \Wazza\DomTranslate\Translation|collection $translations
-     * @return void
+     * @param Translation|Collection $translations
      */
-    public function removeTranslations($translations)
+    public function removeTranslations(Translation|Collection $translations): void
     {
         if ($translations instanceof Translation) {
             $this->removeTranslation($translations);
+            return;
         }
 
         // remove the collection of items
@@ -124,11 +114,9 @@ class Phrase extends Model
     }
 
     /**
-     * Remove all linked Translations from this Phrase
-     *
-     * @return void
+     * Remove all linked Translations from this Phrase.
      */
-    public function removeAllTranslations()
+    public function removeAllTranslations(): void
     {
         $this->translations()->delete();
     }

@@ -4,17 +4,16 @@ namespace Wazza\DomTranslate;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Wazza\DomTranslate\Database\Factories\PhraseFactory;
-use Wazza\DomTranslate\Translation;
-use Wazza\DomTranslate\Phrase;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Wazza\DomTranslate\Database\Factories\LanguageFactory;
 
 class Language extends Model
 {
     use HasFactory;
 
-    public static function newFactory()
+    public static function newFactory(): LanguageFactory
     {
-        return PhraseFactory::new();
+        return LanguageFactory::new();
     }
 
     /**
@@ -26,26 +25,24 @@ class Language extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'code', 'name'
     ];
 
     /**
-     * Method to return a 'one-to-many' relationship. All Phrases for a given Language
-     * @return type
+     * All Phrases for a given Language.
      */
-    public function phrases()
+    public function phrases(): HasMany
     {
         return $this->hasMany(Phrase::class);
     }
 
     /**
-     * Method to return a 'one-to-many' relationship. All Translations for a given Language
-     * @return type
+     * All Translations for a given Language.
      */
-    public function translations()
+    public function translations(): HasMany
     {
         return $this->hasMany(Translation::class);
     }

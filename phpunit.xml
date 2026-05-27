@@ -18,6 +18,6 @@
         <env name="DOM_TRANSLATE_LOG_LEVEL" value="0"/>
         <env name="DOM_TRANSLATE_LOG_INDICATOR" value="domt-testing"/>
         <env name="DOM_TRANSLATE_PROVIDER" value="google"/>
-        <env name="DOM_TRANSLATE_GOOGLE_KEY" value="YOUR_GOOGLE_KEY_HERE"/>
+        <env name="DOM_TRANSLATE_GOOGLE_KEY" value=""/>
     </php>
 </phpunit>

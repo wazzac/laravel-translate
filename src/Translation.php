@@ -4,15 +4,14 @@ namespace Wazza\DomTranslate;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Wazza\DomTranslate\Database\Factories\TranslationFactory;
-use Wazza\DomTranslate\Phrase;
-use Wazza\DomTranslate\Language;
 
 class Translation extends Model
 {
     use HasFactory;
 
-    public static function newFactory()
+    public static function newFactory(): TranslationFactory
     {
         return TranslationFactory::new();
     }
@@ -26,39 +25,32 @@ class Translation extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'value'
     ];
 
     /**
-     * Method to return a `many-to-one` relationship. Showing the Language for the given Translation
-     * @return type
+     * The Language for the given Translation.
      */
-    public function language()
+    public function language(): BelongsTo
     {
         return $this->belongsTo(Language::class, 'language_id', 'id');
     }
 
     /**
-     * Method to return a `many-to-one` relationship. Showing the Phrase for the given Translation
-     * @return type
+     * The Phrase for the given Translation.
      */
-    public function phrase()
+    public function phrase(): BelongsTo
     {
         return $this->belongsTo(Phrase::class, 'phrase_id', 'id');
     }
 
-    /* --------------------- */
-    /* -- Count ------------ */
-
     /**
-     * Return a count of Translations
-     *
-     * @return integer
+     * Return a count of Translations.
      */
-    public function countTranslations()
+    public function countTranslations(): int
     {
         return $this->count();
     }

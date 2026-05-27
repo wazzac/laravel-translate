@@ -13,5 +13,5 @@ interface CloudTranslateInterface
      * @return string Translated string
      * @throws Exception
      */
-    public function cloudTranslate(?string $phrase = null, ?string $langdest = null, ?string $langsrc = null);
+    public function cloudTranslate(?string $phrase = null, ?string $langdest = null, ?string $langsrc = null): string;
 }

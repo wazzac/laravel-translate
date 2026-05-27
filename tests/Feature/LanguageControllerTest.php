@@ -2,16 +2,13 @@
 
 namespace Wazza\DomTranslate\Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use Wazza\DomTranslate\Http\Controllers\LanguageController;
+use PHPUnit\Framework\Attributes\Test;
+use Wazza\DomTranslate\Tests\TestCase;
 
 class LanguageControllerTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
 
-    /** @test */
+    #[Test]
     public function it_can_set_language_preference()
     {
         $response = $this->postJson('/api/translate/set-language', [
@@ -28,7 +25,7 @@ class LanguageControllerTest extends TestCase
         $this->assertEquals('fr', session('app_language_code'));
     }
 
-    /** @test */
+    #[Test]
     public function it_validates_language_input()
     {
         $response = $this->postJson('/api/translate/set-language', [
@@ -39,7 +36,7 @@ class LanguageControllerTest extends TestCase
                  ->assertJsonValidationErrors(['language']);
     }
 
-    /** @test */
+    #[Test]
     public function it_requires_language_input()
     {
         $response = $this->postJson('/api/translate/set-language', []);
@@ -48,7 +45,7 @@ class LanguageControllerTest extends TestCase
                  ->assertJsonValidationErrors(['language']);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_get_current_language_preference()
     {
         // Set a language preference first
@@ -62,7 +59,7 @@ class LanguageControllerTest extends TestCase
                  ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_default_language_when_no_preference_set()
     {
         $response = $this->getJson('/api/translate/get-language');
