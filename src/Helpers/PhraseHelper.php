@@ -7,7 +7,7 @@ class PhraseHelper
     /**
      * Sanitise a given Phrase, removing any single of double quotes.
      *
-     * @param string $string
+     * @param string|null $string
      * @return string
      */
     public static function sanitise(?string $string): string
